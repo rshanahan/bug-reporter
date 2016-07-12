@@ -55,16 +55,16 @@ public final class EmailCapabilitiesProvider {
     }
 
     public boolean canSendEmails() {
-        logger.d("Checking for email apps...");
-
-        final List<ResolveInfo> emailAppInfoList = getEmailAppList();
-
-        if (emailAppInfoList.isEmpty()) {
-            logger.d("No email apps found.");
-            return false;
-        }
-
-        logEmailAppNames("Available email apps: ", emailAppInfoList);
+//        logger.d("Checking for email apps...");
+//
+//        final List<ResolveInfo> emailAppInfoList = getEmailAppList();
+//
+//        if (emailAppInfoList.isEmpty()) {
+//            logger.d("No email apps found.");
+//            return false;
+//        }
+//
+//        logEmailAppNames("Available email apps: ", emailAppInfoList);
         return true;
     }
 

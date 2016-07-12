@@ -16,6 +16,11 @@
  */
 package com.github.stkent.bugshaker.flow.email;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -35,9 +40,6 @@ import com.github.stkent.bugshaker.flow.email.screenshot.ScreenshotProvider;
 import com.github.stkent.bugshaker.utilities.ActivityUtils;
 import com.github.stkent.bugshaker.utilities.Logger;
 import com.github.stkent.bugshaker.utilities.Toaster;
-
-import java.util.Arrays;
-import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -72,6 +74,9 @@ public final class FeedbackEmailFlowManager {
 
     @Nullable
     private Dialog alertDialog;
+
+	@NonNull
+	private static File outputFile;
 
     private String[] emailAddresses;
     private String emailSubjectLine;
@@ -108,11 +113,14 @@ public final class FeedbackEmailFlowManager {
                                     sendEmailWithoutScreenshot(activity);
                                 }
 
-                                @Override
-                                public void onNext(final Uri uri) {
-                                    sendEmailWithScreenshot(activity, uri);
-                                }
-                            });
+								@Override
+								public void onNext(final Uri uri) {
+									saveLogcatToFile(applicationContext);
+									sendEmailWithScreenshot(activity, uri, Uri.fromFile(outputFile));
+								}
+
+
+							});
                 } else {
                     sendEmailWithoutScreenshot(activity);
                 }
@@ -217,25 +225,68 @@ public final class FeedbackEmailFlowManager {
 
     private void sendEmailWithScreenshot(
             @NonNull final Activity activity,
-            @NonNull final Uri screenshotUri) {
+            @NonNull final Uri screenshotUri, final Uri file) {
+	//	logger.d("visited the SEWS that has 3 parameters");
 
         final Intent feedbackEmailIntent = feedbackEmailIntentProvider
-                .getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri);
+            .getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri, file);
 
         final List<ResolveInfo> resolveInfoList = applicationContext.getPackageManager()
-                .queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            .queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
-        for (final ResolveInfo receivingApplicationInfo: resolveInfoList) {
+        for (final ResolveInfo receivingApplicationInfo : resolveInfoList) {
             // FIXME: revoke these permissions at some point!
             applicationContext.grantUriPermission(
-                    receivingApplicationInfo.activityInfo.packageName,
-                    screenshotUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                receivingApplicationInfo.activityInfo.packageName,
+                screenshotUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
+		activity.startActivity(Intent.createChooser(feedbackEmailIntent, "Send email"));
+    //  activity.startActivity(feedbackEmailIntent);
+	//	deleteFile(file);
+		//TODO: write the method deleteFile
+    }
 
-        activity.startActivity(feedbackEmailIntent);
+	private void sendEmailWithScreenshot(
+		@NonNull final Activity activity,
+		@NonNull final Uri screenshotUri) {
+	//	logger.d("visited the SEWS that has 2 parameters");
 
-        logger.d("Sending email with screenshot.");
+		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
+			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri);
+
+		final List<ResolveInfo> resolveInfoList = applicationContext.getPackageManager()
+			.queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+		for (final ResolveInfo receivingApplicationInfo : resolveInfoList) {
+			// FIXME: revoke these permissions at some point!
+			applicationContext.grantUriPermission(
+				receivingApplicationInfo.activityInfo.packageName,
+				screenshotUri,
+				Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		}
+
+		activity.startActivity(feedbackEmailIntent);
+
+		logger.d("Sending email with screenshot. 2");
+	}
+
+    public static File saveLogcatToFile(Context context) {
+        String fileName = "logcat.txt";
+        outputFile = new File(context.getExternalCacheDir(),fileName);
+
+        @SuppressWarnings("unused")
+
+		Process process;
+		{
+			try {
+				process = Runtime.getRuntime().exec("logcat -f " + outputFile.getAbsolutePath());
+			}
+			catch (IOException e) {
+				System.out.println(e.toString());
+			}
+		}
+        return outputFile;
     }
 
     private void sendEmailWithoutScreenshot(@NonNull final Activity activity) {

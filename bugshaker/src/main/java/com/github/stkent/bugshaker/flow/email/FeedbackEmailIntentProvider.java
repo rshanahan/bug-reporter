@@ -16,6 +16,11 @@
  */
 package com.github.stkent.bugshaker.flow.email;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -24,13 +29,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.github.stkent.bugshaker.utilities.StringUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public final class FeedbackEmailIntentProvider {
 
@@ -43,8 +44,8 @@ public final class FeedbackEmailIntentProvider {
     private final GenericEmailIntentProvider genericEmailIntentProvider;
 
     public FeedbackEmailIntentProvider(
-            @NonNull final Context applicationContext,
-            @NonNull final GenericEmailIntentProvider genericEmailIntentProvider) {
+        @NonNull final Context applicationContext,
+        @NonNull final GenericEmailIntentProvider genericEmailIntentProvider) {
 
         this.applicationContext = applicationContext;
         this.genericEmailIntentProvider = genericEmailIntentProvider;
@@ -52,48 +53,70 @@ public final class FeedbackEmailIntentProvider {
 
     @NonNull
     Intent getFeedbackEmailIntent(
-            @NonNull final String[] emailAddresses,
-            @Nullable final String userProvidedEmailSubjectLine) {
+        @NonNull final String[] emailAddresses,
+        @Nullable final String userProvidedEmailSubjectLine) {
 
         final String appInfo = getApplicationInfoString();
         final String emailSubjectLine = getEmailSubjectLine(userProvidedEmailSubjectLine);
 
         return genericEmailIntentProvider
-                .getEmailIntent(emailAddresses, emailSubjectLine, appInfo);
+            .getEmailIntent(emailAddresses, emailSubjectLine, appInfo);
     }
 
     @NonNull
     Intent getFeedbackEmailIntent(
-            @NonNull final String[] emailAddresses,
-            @Nullable final String userProvidedEmailSubjectLine,
-            @NonNull final Uri screenshotUri) {
+        @NonNull final String[] emailAddresses,
+        @Nullable final String userProvidedEmailSubjectLine,
+        @NonNull final Uri screenshotUri,
+        @NonNull final Uri fileName
+    ) {
 
         final String appInfo = getApplicationInfoString();
         final String emailSubjectLine = getEmailSubjectLine(userProvidedEmailSubjectLine);
 
         return genericEmailIntentProvider
-                .getEmailWithAttachmentIntent(
-                        emailAddresses, emailSubjectLine, appInfo, screenshotUri);
+            .getEmailWithAttachmentIntent(
+                emailAddresses, emailSubjectLine, appInfo, screenshotUri, fileName);
+    }
+
+    @NonNull
+    Intent getFeedbackEmailIntent(
+        @NonNull final String[] emailAddresses,
+        @Nullable final String userProvidedEmailSubjectLine,
+        @NonNull final Uri screenshotUri
+    ) {
+
+        final String appInfo = getApplicationInfoString();
+        final String emailSubjectLine = getEmailSubjectLine(userProvidedEmailSubjectLine);
+
+        return genericEmailIntentProvider
+            .getEmailWithAttachmentIntent(
+                emailAddresses, emailSubjectLine, appInfo, screenshotUri);
     }
 
     @NonNull
     private CharSequence getApplicationName() {
         return applicationContext.getApplicationInfo()
-                .loadLabel(applicationContext.getPackageManager());
+            .loadLabel(applicationContext.getPackageManager());
     }
 
     @NonNull
     private String getApplicationInfoString() {
         return    "My Device: " + getDeviceName()
-                + "\n"
-                + "App Version: " + getVersionDisplayString()
-                + "\n"
-                + "Android Version: " + getAndroidOsVersionDisplayString()
-                + "\n"
-                + "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date())
-                + "\n"
-                + "---------------------"
-                + "\n\n";
+            + "\n"
+            + "App Version: " + getVersionDisplayString()
+            + "\n"
+            + "Android Version: " + getAndroidOsVersionDisplayString()
+            + "\n"
+            + "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date())
+            + "\n"
+            + "Log: " + Log.d("BugShaker-Library", "Test".toString())
+            + "\n"
+            + "ID: " + Build.ID
+            + "\n"
+            + "Display: " + Build.DISPLAY
+            + "---------------------"
+            + "\n\n";
     }
 
     @NonNull
@@ -126,7 +149,7 @@ public final class FeedbackEmailIntentProvider {
         try {
             final PackageManager packageManager = applicationContext.getPackageManager();
             final PackageInfo packageInfo
-                    = packageManager.getPackageInfo(applicationContext.getPackageName(), 0);
+                = packageManager.getPackageInfo(applicationContext.getPackageName(), 0);
 
             final String applicationVersionName = packageInfo.versionName;
             final int applicationVersionCode = packageInfo.versionCode;
@@ -145,7 +168,7 @@ public final class FeedbackEmailIntentProvider {
     @NonNull
     private String getCurrentUtcTimeStringForDate(final Date date) {
         final SimpleDateFormat simpleDateFormat
-                = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss z", Locale.getDefault());
+            = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss z", Locale.getDefault());
 
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
