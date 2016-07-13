@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "com.github.stkent.bugshaker"
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 4
+        versionName "1.3.0"
+    }
+
+    signingConfigs {
+        release {
+            String releaseKeyStoreFileName = System.properties['user.home'] + "/.bugshaker/bugshaker.jks"
+            String releasePropFileName = System.properties['user.home'] + "/.bugshaker/bugshaker.properties"
+
+            if (file(releaseKeyStoreFileName).exists() && file(releasePropFileName).exists()) {
+                Properties releaseProps = new Properties()
+                releaseProps.load(new FileInputStream(releasePropFileName))
+
+                storeFile file(releaseKeyStoreFileName)
+                storePassword releaseProps.pass
+                keyAlias releaseProps.alias
+                keyPassword releaseProps.pass
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.google.android.gms:play-services-maps:9.0.2'
+    compile project(':bugshaker')
+}

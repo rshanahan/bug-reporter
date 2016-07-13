@@ -242,9 +242,7 @@ public final class FeedbackEmailFlowManager {
                 Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
 		activity.startActivity(Intent.createChooser(feedbackEmailIntent, "Send email"));
-    //  activity.startActivity(feedbackEmailIntent);
-	//	deleteFile(file);
-		//TODO: write the method deleteFile
+		outputFile.delete();
     }
 
 	private void sendEmailWithScreenshot(
@@ -268,7 +266,9 @@ public final class FeedbackEmailFlowManager {
 
 		activity.startActivity(feedbackEmailIntent);
 
-		logger.d("Sending email with screenshot. 2");
+
+
+
 	}
 
     public static File saveLogcatToFile(Context context) {
@@ -297,5 +297,7 @@ public final class FeedbackEmailFlowManager {
 
         logger.d("Sending email with no screenshot.");
     }
+
+
 
 }

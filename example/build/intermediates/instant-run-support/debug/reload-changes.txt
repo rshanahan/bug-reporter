@@ -1,0 +1,2 @@
+CHANGED,/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/android/tools/fd/runtime/AppPatchesLoaderImpl.class
+CHANGED,/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/github/stkent/bugshaker/flow/email/FeedbackEmailFlowManager$override.class

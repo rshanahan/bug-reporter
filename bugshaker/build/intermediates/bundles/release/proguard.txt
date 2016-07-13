@@ -1,0 +1,32 @@
+# Configuration from https://github.com/cypressious/RxJavaProGuardRules/blob/2fcb72b/rxjava-proguard-rules/proguard-rules.txt
+-dontwarn sun.misc.**
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+# FIXME: remove this when Android Gradle plugin is fixed.
+# See https://github.com/artem-zinnatullin/RxJavaProGuardRules/pull/23#issuecomment-181529232
+# https://github.com/artem-zinnatullin/RxJavaProGuardRules/issues/22
+# https://code.google.com/p/android/issues/detail?id=200518
+-keepclassmembers class rx.schedulers.CachedThreadScheduler$EventLoopWorker {
+    volatile int once;
+}
+
+# Make sure the GoogleMap class is protected; we determine whether or not to look for maps in the
+# view hierarchy by attempting to load this class by name (reflectively):
+-keep class com.google.android.gms.maps.GoogleMap
+
+# Make sure the AppCompat AlertDialog class is protected; if a library consumer has requested
+# AppCompat dialogs, we attempt to load this class by name (reflectively) before using it:
+-keep class android.support.v7.app.AlertDialog
+
