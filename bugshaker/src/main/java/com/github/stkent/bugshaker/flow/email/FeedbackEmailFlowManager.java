@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.WindowManager;
 
 import com.github.stkent.bugshaker.ActivityReferenceManager;
@@ -52,7 +53,11 @@ public final class FeedbackEmailFlowManager {
 
     private static final int FLAG_SECURE_VALUE = 0x00002000;
 
-    @NonNull
+	private static final String SCREENSHOTS_DIRECTORY_NAME = "bug-reports";
+	private static final String SCREENSHOT_FILE_NAME = "latest-screenshot.jpg";
+
+
+	@NonNull
     private final Context applicationContext;
 
     @NonNull
@@ -190,20 +195,9 @@ public final class FeedbackEmailFlowManager {
     };
 
 	private void startActivity(Uri uri) {
-//		File file = new File("/data/data/com.github.stkent.bugshaker/files/bug-reports/latest-screenshot.jpg");
-//		String path = file.getAbsolutePath();
-//		if(file.exists()) {
-//			Intent ii = new Intent(applicationContext, MainActivity.class);
-//			ii.putExtra("uri", path);
-//			ii.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			applicationContext.startActivity(ii);
-//		}else{
-//			throw new RuntimeException();
-//		}
-		String path1 = uri.getPath();
-		File file = new File("/data/data/com.github.stkent.bugshaker/files" + path1);
-		String path = file.getAbsolutePath();
+		File file = ScreenshotUtil.getScreenshotFile(applicationContext);
 
+		String path = file.getAbsolutePath();
 
 		if(file.exists()) {
 			Intent ii = new Intent(applicationContext, MainActivity.class);
@@ -286,8 +280,27 @@ public final class FeedbackEmailFlowManager {
             return;
         }
 
-		final Dialog dialog = new Dialog(applicationContext);
-		dialog.setTitle("Shake Detected!");
+		LayoutInflater inflater = new LayoutInflater(applicationContext) {
+			@Override
+			public LayoutInflater cloneInContext(Context context) {
+				return null;
+			}
+		};
+
+//
+//		View alertLayout = inflater.inflate(R.layout.alert_dialog, null);
+//		final Button report = (Button) alertLayout.findViewById(R.id.btn1);
+//		final Button annotate = (Button) alertLayout.findViewById(R.id.btn2);
+//		final Button cancel = (Button) alertLayout.findViewById(R.id.btn3);
+//
+//		AlertDialog.Builder hi = new AlertDialog.Builder(currentActivity);
+//		hi.setMessage("Shake Detected!"+ '\n' + "Would you like to report a bug?");
+
+
+//		final Dialog dialog = new Dialog(applicationContext);
+//		dialog.setTitle("Shake Detected!");
+//		dialog.setContentView(R.layout.alert_dialog);
+//		dialog.show();
 
 
 
@@ -298,12 +311,20 @@ public final class FeedbackEmailFlowManager {
 		hi.setPositiveButton("Report", reportBugClickListener);
 		hi.setNegativeButton("Cancel", null);
 		hi.setNeutralButton("Annotate screenshot and report", screenshotListener);
+
 		AlertDialog alert = hi.create();
 		alert.show();
 
+//		alertDialog.setContentView(R.layout.alert_dialog);
+//
+//      alertDialog = alertDialogProvider.getAlertDialog(currentActivity, reportBugClickListener);
+//      alertDialog.show();
 
-//        alertDialog = alertDialogProvider.getAlertDialog(currentActivity, reportBugClickListener);
-//        alertDialog.show();
+
+
+
+
+
     }
 
     private void dismissDialog() {
