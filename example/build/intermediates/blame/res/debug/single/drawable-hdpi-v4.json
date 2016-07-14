@@ -4,12 +4,12 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_normal.9.png",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-hdpi-v4/common_plus_signin_btn_text_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_track_mtrl_alpha.9.png",
@@ -96,12 +96,12 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_focused.9.png"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_focused_holo.9.png",
@@ -252,12 +252,12 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_focused.9.png",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-hdpi-v4/common_google_signin_btn_icon_dark_focused.9.png"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_divider_mtrl_alpha.9.png",
@@ -292,11 +292,11 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_textfield_default_mtrl_alpha.9.png"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_disabled.9.png",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-hdpi-v4/common_plus_signin_btn_icon_light_disabled.9.png"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_disabled.9.png",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-hdpi-v4/common_plus_signin_btn_icon_light_disabled.9.png"
     }
 ]

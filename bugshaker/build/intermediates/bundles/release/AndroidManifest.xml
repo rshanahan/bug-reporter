@@ -26,6 +26,7 @@
         <!-- <data android:mimeType="image/*" /> -->
         <!-- <data android:mimeType="video/*" /> -->
         <!-- </intent-filter> -->
+        <activity android:name="com.github.stkent.bugshaker.MainActivity" />
     </application>
 
 </manifest>

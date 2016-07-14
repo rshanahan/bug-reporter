@@ -77,6 +77,9 @@
 # view AndroidManifest.xml #generated:27
 -keep class com.example.bugshaker.UnsecuredActivity { <init>(...); }
 
+# view AndroidManifest.xml #generated:87
+-keep class com.github.stkent.bugshaker.MainActivity { <init>(...); }
+
 # view AndroidManifest.xml #generated:58
 -keep class com.google.android.gms.common.api.GoogleApiActivity { <init>(...); }
 

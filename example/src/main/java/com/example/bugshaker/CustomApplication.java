@@ -27,6 +27,7 @@ public final class CustomApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+
         BugShaker.get(this)
                  .setEmailAddresses("someone@example.com")
                  .setLoggingEnabled(BuildConfig.DEBUG)

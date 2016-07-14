@@ -148,12 +148,12 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/drawable/abc_seekbar_track_material.xml"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_light.xml",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable/common_google_signin_btn_text_light.xml"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/drawable/common_plus_signin_btn_text_dark.xml",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable/common_plus_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/drawable/common_google_signin_btn_text_light.xml",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable/common_google_signin_btn_text_light.xml"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/drawable/abc_item_background_holo_light.xml",

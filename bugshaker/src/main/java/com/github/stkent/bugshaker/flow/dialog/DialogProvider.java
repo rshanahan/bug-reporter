@@ -27,6 +27,7 @@ public interface DialogProvider {
     String  ALERT_DIALOG_MESSAGE         = "Would you like to report a bug?";
     String  ALERT_DIALOG_POSITIVE_BUTTON = "Report";
     String  ALERT_DIALOG_NEGATIVE_BUTTON = "Cancel";
+    String  ALERT_DIALOG_ANNOTATE_BUTTON = "Report with annotation";
     boolean ALERT_DIALOG_CANCELABLE      = false;
 
     @NonNull

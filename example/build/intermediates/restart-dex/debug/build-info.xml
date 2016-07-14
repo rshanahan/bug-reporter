@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
     abi="armeabi-v7a,armeabi"
-    api-level="19"
-    density="xhdpi"
+    api-level="21"
+    density="xxhdpi"
     format="7"
-    timestamp="24883665356682"
+    timestamp="13073314769507"
     token="4593155895663637047" >
 
     <task
         name="javac"
-        duration="74" />
+        duration="0" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="10" />
+        duration="0" />
     <task
         name="verifier"
-        duration="2" />
+        duration="0" />
 
     <artifact
         location="/Users/aschen/Downloads/bugshaker-android-master 2/example/build/outputs/apk/example-debug.apk"
         type="MAIN" />
 
-    <build timestamp="24883665356682" >
+    <build timestamp="13073314769507" >
         <artifact
             location="/Users/aschen/Downloads/bugshaker-android-master 2/example/build/outputs/apk/example-debug.apk"
             type="MAIN" />

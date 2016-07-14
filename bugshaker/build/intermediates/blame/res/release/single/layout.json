@@ -136,6 +136,10 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/select_dialog_multichoice_material.xml"
     },
     {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/layout/activity_main.xml",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/src/main/res/layout/activity_main.xml"
+    },
+    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/layout/abc_activity_chooser_view.xml",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/abc_activity_chooser_view.xml"
     },
@@ -146,6 +150,10 @@
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/layout/abc_action_menu_layout.xml",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/abc_action_menu_layout.xml"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/layout/alert_dialog.xml",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/src/main/res/layout/alert_dialog.xml"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/release/layout/abc_search_view.xml",

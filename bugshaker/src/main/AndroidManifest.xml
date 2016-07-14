@@ -1,5 +1,6 @@
-<manifest package="com.github.stkent.bugshaker"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.stkent.bugshaker">
 
     <application>
         <provider
@@ -12,16 +13,14 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.SEND_MULTIPLE" />-->
-            <!--<data android:scheme="mailto" />-->
-            <!--<data android:mimeType="text/plain" />-->
-            <!--<data android:mimeType="image/*" />-->
-            <!--<data android:mimeType="video/*" />-->
-        <!--</intent-filter>-->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.SEND_MULTIPLE" /> -->
+        <!-- <data android:scheme="mailto" /> -->
+        <!-- <data android:mimeType="text/plain" /> -->
+        <!-- <data android:mimeType="image/*" /> -->
+        <!-- <data android:mimeType="video/*" /> -->
+        <!-- </intent-filter> -->
+        <activity android:name=".MainActivity"></activity>
     </application>
-
-
-
 
 </manifest>

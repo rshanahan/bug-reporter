@@ -28,13 +28,15 @@ public final class AppCompatDialogProvider implements DialogProvider {
     @Override
     public Dialog getAlertDialog(
             @NonNull final Activity activity,
-            @NonNull final DialogInterface.OnClickListener reportBugClickListener) {
+            @NonNull final DialogInterface.OnClickListener reportBugClickListener){
+
 
         return new AlertDialog.Builder(activity)
                 .setTitle(ALERT_DIALOG_TITLE)
                 .setMessage(ALERT_DIALOG_MESSAGE)
                 .setPositiveButton(ALERT_DIALOG_POSITIVE_BUTTON, reportBugClickListener)
                 .setNegativeButton(ALERT_DIALOG_NEGATIVE_BUTTON, null)
+                .setNeutralButton(ALERT_DIALOG_ANNOTATE_BUTTON, reportBugClickListener)
                 .setCancelable(ALERT_DIALOG_CANCELABLE)
                 .create();
     }

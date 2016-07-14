@@ -76,7 +76,14 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-        </provider>
+        </provider> <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.SEND_MULTIPLE" /> -->
+        <!-- <data android:scheme="mailto" /> -->
+        <!-- <data android:mimeType="text/plain" /> -->
+        <!-- <data android:mimeType="image/*" /> -->
+        <!-- <data android:mimeType="video/*" /> -->
+        <!-- </intent-filter> -->
+        <activity android:name="com.github.stkent.bugshaker.MainActivity" />
     </application>
 
 </manifest>

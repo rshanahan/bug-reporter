@@ -37,7 +37,7 @@ MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/aschen/
 MERGED from [com.android.support:support-v4:24.0.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:25:5-20
 MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
 MERGED from [com.android.support:support-v4:24.0.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:25:5-20
-MERGED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.github.stkent/bugshaker/1.3.0/AndroidManifest.xml:11:5-29:19
+MERGED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.github.stkent/bugshaker/1.3.0/AndroidManifest.xml:11:5-30:19
 MERGED from [com.google.android.gms:play-services-maps:9.0.2] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.0.2/AndroidManifest.xml:27:5-20
 MERGED from [com.google.android.gms:play-services-base:9.0.2] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/AndroidManifest.xml:19:5-23:19
 MERGED from [com.google.android.gms:play-services-basement:9.0.2] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.2/AndroidManifest.xml:20:5-24:19
@@ -252,3 +252,7 @@ ADDED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker
 		ADDED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.github.stkent/bugshaker/1.3.0/AndroidManifest.xml:19:17-50
 	android:name
 		ADDED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.github.stkent/bugshaker/1.3.0/AndroidManifest.xml:18:17-67
+activity#com.github.stkent.bugshaker.MainActivity
+ADDED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.github.stkent/bugshaker/1.3.0/AndroidManifest.xml:29:9-77
+	android:name
+		ADDED from [com.github.stkent:bugshaker:1.3.0] /Users/aschen/Downloads/bugshaker-android-master 2/example/build/intermediates/exploded-aar/com.github.stkent/bugshaker/1.3.0/AndroidManifest.xml:29:19-74

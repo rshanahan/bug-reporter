@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,12 +30,15 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
 
 import com.github.stkent.bugshaker.ActivityReferenceManager;
+import com.github.stkent.bugshaker.MainActivity;
 import com.github.stkent.bugshaker.flow.dialog.DialogProvider;
 import com.github.stkent.bugshaker.flow.email.screenshot.ScreenshotProvider;
 import com.github.stkent.bugshaker.utilities.ActivityUtils;
@@ -82,10 +86,59 @@ public final class FeedbackEmailFlowManager {
     private String emailSubjectLine;
     private boolean ignoreFlagSecure;
 
+
+	private final OnClickListener screenshotListener = new OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialogInterface, int i) {
+			final Activity activity = activityReferenceManager.getValidatedActivity();
+			if (activity == null) {
+				return;
+			}
+
+			if (shouldAttemptToCaptureScreenshot(activity)) {
+				if (emailCapabilitiesProvider.canSendEmailsWithAttachments()) {
+					screenshotProvider.getScreenshotUri(activity)
+						.single()
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribeOn(AndroidSchedulers.mainThread())
+						.subscribe(new Subscriber<Uri>() {
+							@Override
+							public void onCompleted() {
+								// This method intentionally left blank.
+							}
+
+							@Override
+							public void onError(final Throwable e) {
+								final String errorString = "Screenshot capture failed";
+								toaster.toast(errorString);
+								logger.e(errorString);
+
+								logger.printStackTrace(e);
+							}
+
+							@Override
+							public void onNext(final Uri uri) {
+								startActivity(uri);
+							}
+
+
+						});
+				}
+			} else {
+				final String warningString = "Window is secured; no screenshot taken";
+
+				toaster.toast(warningString);
+				logger.d(warningString);
+			}
+
+		}
+
+		};
+
     private final OnClickListener reportBugClickListener = new OnClickListener() {
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
-            final Activity activity = activityReferenceManager.getValidatedActivity();
+			final Activity activity = activityReferenceManager.getValidatedActivity();
             if (activity == null) {
                 return;
             }
@@ -116,6 +169,7 @@ public final class FeedbackEmailFlowManager {
 								@Override
 								public void onNext(final Uri uri) {
 									saveLogcatToFile(applicationContext);
+
 									sendEmailWithScreenshot(activity, uri, Uri.fromFile(outputFile));
 								}
 
@@ -135,7 +189,48 @@ public final class FeedbackEmailFlowManager {
         }
     };
 
-    public FeedbackEmailFlowManager(
+	private void startActivity(Uri uri) {
+//		File file = new File("/data/data/com.github.stkent.bugshaker/files/bug-reports/latest-screenshot.jpg");
+//		String path = file.getAbsolutePath();
+//		if(file.exists()) {
+//			Intent ii = new Intent(applicationContext, MainActivity.class);
+//			ii.putExtra("uri", path);
+//			ii.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			applicationContext.startActivity(ii);
+//		}else{
+//			throw new RuntimeException();
+//		}
+		String path1 = uri.getPath();
+		File file = new File("/data/data/com.github.stkent.bugshaker/files" + path1);
+		String path = file.getAbsolutePath();
+
+
+		if(file.exists()) {
+			Intent ii = new Intent(applicationContext, MainActivity.class);
+			ii.putExtra("uri", path);
+			ii.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			applicationContext.startActivity(ii);
+		}else{
+			throw new RuntimeException();
+		}
+	}
+
+	public String getRealPathFromURI(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+
+	public FeedbackEmailFlowManager(
             @NonNull final Context applicationContext,
             @NonNull final EmailCapabilitiesProvider emailCapabilitiesProvider,
             @NonNull final Toaster toaster,
@@ -191,8 +286,24 @@ public final class FeedbackEmailFlowManager {
             return;
         }
 
-        alertDialog = alertDialogProvider.getAlertDialog(currentActivity, reportBugClickListener);
-        alertDialog.show();
+		final Dialog dialog = new Dialog(applicationContext);
+		dialog.setTitle("Shake Detected!");
+
+
+
+		AlertDialog.Builder hi = new AlertDialog.Builder(currentActivity);
+		hi.setMessage("Shake Detected!"+ '\n' + "Would you like to report a bug?");
+		hi.setCancelable(false);
+
+		hi.setPositiveButton("Report", reportBugClickListener);
+		hi.setNegativeButton("Cancel", null);
+		hi.setNeutralButton("Annotate screenshot and report", screenshotListener);
+		AlertDialog alert = hi.create();
+		alert.show();
+
+
+//        alertDialog = alertDialogProvider.getAlertDialog(currentActivity, reportBugClickListener);
+//        alertDialog.show();
     }
 
     private void dismissDialog() {

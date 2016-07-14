@@ -60,12 +60,12 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-mdpi-v4/common_google_signin_btn_text_light_focused.9.png"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/common_google_signin_btn_icon_dark_normal.9.png",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-mdpi-v4/common_google_signin_btn_icon_dark_normal.9.png"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/common_plus_signin_btn_icon_dark_normal.9.png",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-mdpi-v4/common_plus_signin_btn_icon_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/common_google_signin_btn_icon_dark_normal.9.png",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.2/res/drawable-mdpi-v4/common_google_signin_btn_icon_dark_normal.9.png"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png",

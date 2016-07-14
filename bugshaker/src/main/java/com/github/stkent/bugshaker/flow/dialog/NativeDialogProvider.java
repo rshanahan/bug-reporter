@@ -30,12 +30,20 @@ public final class NativeDialogProvider implements DialogProvider {
             @NonNull final Activity activity,
             @NonNull final DialogInterface.OnClickListener reportBugClickListener) {
 
+        final DialogInterface.OnClickListener annotateClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        };
+
         return new AlertDialog.Builder(activity)
-                .setTitle(ALERT_DIALOG_TITLE)
-                .setMessage(ALERT_DIALOG_MESSAGE)
-                .setPositiveButton(ALERT_DIALOG_POSITIVE_BUTTON, reportBugClickListener)
-                .setNegativeButton(ALERT_DIALOG_NEGATIVE_BUTTON, null)
-                .setCancelable(ALERT_DIALOG_CANCELABLE)
+//                .setTitle(ALERT_DIALOG_TITLE)
+//                .setMessage(ALERT_DIALOG_MESSAGE)
+//                .setPositiveButton(ALERT_DIALOG_POSITIVE_BUTTON, reportBugClickListener)
+//                .setNegativeButton(ALERT_DIALOG_NEGATIVE_BUTTON, null)
+//                .setNeutralButton(ALERT_DIALOG_ANNOTATE_BUTTON, annotateClickListener)
+//                .setCancelable(ALERT_DIALOG_CANCELABLE)
                 .create();
     }
 

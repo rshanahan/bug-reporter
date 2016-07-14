@@ -12,6 +12,10 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/support_simple_spinner_dropdown_item.xml"
     },
     {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/debug/layout/activity_main.xml",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/src/main/res/layout/activity_main.xml"
+    },
+    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/abc_list_menu_item_checkbox.xml"
     },
@@ -140,12 +144,12 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/notification_template_part_time.xml"
     },
     {
-        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
-        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/notification_template_big_media_narrow.xml"
-    },
-    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/debug/layout/abc_action_mode_bar.xml",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/notification_template_big_media_narrow.xml"
     },
     {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/debug/layout/abc_action_bar_view_list_nav_layout.xml",

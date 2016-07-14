@@ -116,6 +116,10 @@
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/select_dialog_item_material.xml"
     },
     {
+        "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/androidTest/debug/layout/activity_main.xml",
+        "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/bundles/debug/res/layout/activity_main.xml"
+    },
+    {
         "merged": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/res/merged/androidTest/debug/layout/abc_action_bar_view_list_nav_layout.xml",
         "source": "/Users/aschen/Downloads/bugshaker-android-master 2/bugshaker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.0.0/res/layout/abc_action_bar_view_list_nav_layout.xml"
     },
