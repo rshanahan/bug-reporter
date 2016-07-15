@@ -16,19 +16,20 @@
  */
 package com.github.stkent.bugshaker.flow.email.screenshot;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
+import com.github.stkent.bugshaker.ScreenshotUtil;
 import com.github.stkent.bugshaker.utilities.Logger;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -37,14 +38,12 @@ final class ScreenshotUriObservable {
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final String AUTHORITY_SUFFIX = ".bugshaker.fileprovider";
-    private static final String SCREENSHOTS_DIRECTORY_NAME = "bug-reports";
-    private static final String SCREENSHOT_FILE_NAME = "latest-screenshot.jpg";
     private static final int JPEG_COMPRESSION_QUALITY = 90;
 
     static Observable<Uri> create(
-            @NonNull final Context applicationContext,
-            @NonNull final Bitmap bitmap,
-            @NonNull final Logger logger) {
+        @NonNull final Context applicationContext,
+        @NonNull final Bitmap bitmap,
+        @NonNull final Logger logger) {
 
         return Observable.create(new Observable.OnSubscribe<Uri>() {
             @Override
@@ -52,24 +51,24 @@ final class ScreenshotUriObservable {
                 OutputStream fileOutputStream = null;
 
                 try {
-                    final File screenshotFile = getScreenshotFile(applicationContext);
+                    final File screenshotFile = ScreenshotUtil.getScreenshotFile(applicationContext);
 
                     fileOutputStream = new BufferedOutputStream(
-                            new FileOutputStream(screenshotFile));
+                        new FileOutputStream(screenshotFile));
 
                     bitmap.compress(
-                            Bitmap.CompressFormat.JPEG,
-                            JPEG_COMPRESSION_QUALITY,
-                            fileOutputStream);
+                        Bitmap.CompressFormat.JPEG,
+                        JPEG_COMPRESSION_QUALITY,
+                        fileOutputStream);
 
                     fileOutputStream.flush();
 
                     logger.d("Screenshot saved to " + screenshotFile.getAbsolutePath());
 
                     final Uri result = FileProvider.getUriForFile(
-                            applicationContext,
-                            applicationContext.getPackageName() + AUTHORITY_SUFFIX,
-                            screenshotFile);
+                        applicationContext,
+                        applicationContext.getPackageName() + AUTHORITY_SUFFIX,
+                        screenshotFile);
 
                     logger.d("Screenshot Uri created: " + result);
 
@@ -95,14 +94,6 @@ final class ScreenshotUriObservable {
 
     }
 
-    private static File getScreenshotFile(@NonNull final Context applicationContext) {
-        final File screenshotsDir = new File(
-                applicationContext.getFilesDir(), SCREENSHOTS_DIRECTORY_NAME);
 
-        //noinspection ResultOfMethodCallIgnored
-        screenshotsDir.mkdirs();
-
-        return new File(screenshotsDir, SCREENSHOT_FILE_NAME);
-    }
 
 }
