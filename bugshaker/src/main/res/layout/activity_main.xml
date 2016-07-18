@@ -17,13 +17,7 @@
         android:layout_gravity="center"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/new_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:contentDescription="@string/start_new"
-            android:src="@drawable/new_pic"
-            />
+
         <ImageButton
             android:id="@+id/draw_btn"
             android:layout_width="wrap_content"
@@ -39,12 +33,15 @@
             android:src="@drawable/eraser"
             />
         <ImageButton
-            android:id="@+id/save_btn"
+            android:id="@+id/sendEmail"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:contentDescription="@string/save"
-            android:src="@drawable/save"
-            />
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="10dp"
+            android:contentDescription="Send Email"
+            android:src="@drawable/send_icon"/>
+
 
     </LinearLayout>
 
@@ -196,14 +193,14 @@
     <ImageView
         android:id="@+id/screen"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content">
+
     </ImageView>
 
     <com.github.stkent.bugshaker.flow.widget.DrawingView
         android:id="@+id/drawing"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"

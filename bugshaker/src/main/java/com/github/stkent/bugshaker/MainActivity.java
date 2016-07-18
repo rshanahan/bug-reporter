@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 
 	private float smallBrush, mediumBrush, largeBrush;
-	private ImageButton currPaint, drawBtn, eraseBtn;
+	private ImageButton currPaint, drawBtn, eraseBtn, sendBtn;
 
 
 	@Override
@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		drawView.setBrushSize(mediumBrush);
 		eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
 		eraseBtn.setOnClickListener(this);
+		sendBtn = (ImageButton)findViewById(R.id.sendEmail);
+		sendBtn.setOnClickListener(this);
+
+
 
 		String pathOfScreenshot = getIntent().getStringExtra("uri");
 		File file = new File(pathOfScreenshot);
