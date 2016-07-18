@@ -40,6 +40,7 @@ import android.view.WindowManager;
 
 import com.github.stkent.bugshaker.ActivityReferenceManager;
 import com.github.stkent.bugshaker.MainActivity;
+import com.github.stkent.bugshaker.ScreenshotUtil;
 import com.github.stkent.bugshaker.flow.dialog.DialogProvider;
 import com.github.stkent.bugshaker.flow.email.screenshot.ScreenshotProvider;
 import com.github.stkent.bugshaker.utilities.ActivityUtils;
@@ -195,7 +196,7 @@ public final class FeedbackEmailFlowManager {
 	};
 
 	private void startActivity(Uri uri) {
-		File file = com.github.stkent.bugshaker.flow.email.ScreenshotUtil.getScreenshotFile(applicationContext);
+		File file = ScreenshotUtil.getScreenshotFile(applicationContext);
 
 		String path = file.getAbsolutePath();
 
