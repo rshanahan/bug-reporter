@@ -2,9 +2,6 @@ package com.github.stkent.bugshaker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import android.app.Activity;
 import android.app.Application;
@@ -47,12 +44,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	private EmailCapabilitiesProvider emailCapabilitiesProvider;
 
-	private Uri mUri;
+//	private Uri mUri;
 
 	private Activity activity;
 
 	private float smallBrush, mediumBrush, largeBrush;
-	private ImageButton currPaint, drawBtn, eraseBtn, sendBtn;
+	private ImageButton currPaint, drawBtn, eraseBtn, sendBtn, speechBtn;
 
 
 	@Override
@@ -72,11 +69,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 		drawBtn = (ImageButton)findViewById(R.id.draw_btn);
 		drawBtn.setOnClickListener(this);
-		drawView.setBrushSize(mediumBrush);
+
+		drawView.setBrushSize(smallBrush);
+
 		eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
 		eraseBtn.setOnClickListener(this);
+
 		sendBtn = (ImageButton)findViewById(R.id.sendEmail);
 		sendBtn.setOnClickListener(this);
+
+		speechBtn = (ImageButton)findViewById(R.id.speechBox);
+		speechBtn.setOnClickListener(this);
+
 		final GenericEmailIntentProvider genericEmailIntentProvider
 			= new GenericEmailIntentProvider();
 
@@ -96,22 +100,20 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 
 		String pathOfScreenshot = getIntent().getStringExtra("uri");
-		File file = new File(pathOfScreenshot);
-		if(file.exists()) {
+		File screenshotFile = new File(pathOfScreenshot);
+		if(screenshotFile.exists()) {
 			Bitmap myBitmap = BitmapFactory.decodeFile(pathOfScreenshot);
 
 			drawView = (DrawingView) findViewById(R.id.drawing);
 			Drawable temp = new BitmapDrawable(getResources(), myBitmap);
 
 
-			drawView.setBackground(temp);
+			drawView.setBackgroundDrawable(temp);
 		}
-		else{
+		else {
 			throw new RuntimeException();
 		}
 	}
-
-
 
 	@Override
 	public void onClick(View view){
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		if(view.getId()==R.id.draw_btn){
 			//draw button clicked
 			final Dialog brushDialog = new Dialog(this);
-			brushDialog.setTitle("Brush size:");
+			brushDialog.setTitle(getApplicationContext().getString(R.string.brush_dialog_title));
 			brushDialog.setContentView(R.layout.brush_chooser);
 
 			ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
@@ -156,14 +158,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			});
 
 			brushDialog.show();
+
 		} else if (view.getId() == R.id.erase_btn){
-			//siwtch to erase, choose size
+			//switch to erase, choose size
 			final Dialog brushDialog = new Dialog(this);
-			brushDialog.setTitle("Eraser size:");
+			brushDialog.setTitle(getApplicationContext().getString(R.string.brush_dialog_title));
 			brushDialog.setContentView(R.layout.brush_chooser);
-
-
-
 			ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
 			smallBtn.setOnClickListener(new OnClickListener() {
 				@Override
@@ -198,59 +198,29 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 		else if (view.getId()==R.id.sendEmail){
 			saveDrawing();
-			//should send screenshot to email
-
 		}
+		else if (view.getId()==R.id.speechBox){
+
+			createTextEdit();
+		}
+
 
 
 	}
 
-	public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException {
-		try {
-			InputStream input = this.getContentResolver().openInputStream(uri);
-
-			BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
-			onlyBoundsOptions.inJustDecodeBounds = true;
-			onlyBoundsOptions.inDither = true;//optional
-			onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
-			BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
-			input.close();
-			if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
-				return null;
-
-			int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight
-				: onlyBoundsOptions.outWidth;
-
-
-
-			BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-
-			bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
-			input = getApplication().getContentResolver().openInputStream(uri);
-			Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-			input.close();
-			return bitmap;
-		}
-		catch(IOException e){
-
-		}
-		Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-		Bitmap b = Bitmap.createBitmap(10, 10, conf);
-		return b;
-
+	public void createTextEdit(){
+		//get x and y
 	}
 
 	public void paintClicked(View view){
 		//use chosen color
-	//	drawView.setColor("#000000");
-
 		drawView.setBrushSize(drawView.getLastBrushSize());
 
 		if(view!=currPaint){
 			//update color
 			ImageButton imgView = (ImageButton)view;
-			String color = view.getTag().toString();
-			drawView.setColor(color);
+			String clickedButtonColor = view.getTag().toString();
+			drawView.setColor(clickedButtonColor);
 
 			imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 			currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
@@ -267,19 +237,20 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	private void saveDrawing() {
 		AlertDialog.Builder sendDialog = new AlertDialog.Builder(this);
-		sendDialog.setTitle("Send Annotated Screenshot");
-		sendDialog.setMessage("Send Annotated Screenshot on email?");
-		sendDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+
+		sendDialog.setTitle(getApplicationContext().getString(R.string.send_annotated_screenshot));
+		sendDialog.setMessage(getApplicationContext().getString(R.string.attach_annotated_screenshot_to_email));
+		sendDialog.setPositiveButton(getApplicationContext().getString(R.string.yes), new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int which){
 				drawView.setDrawingCacheEnabled(true);
 
-
+				//Saves image in phone Gallery
 				String imgSaved = MediaStore.Images.Media.insertImage(
 					getContentResolver(), drawView.getDrawingCache(),
-					"Screenshot" + ".png", "drawing");
-				Bitmap bm = drawView.getDrawingCache();
+					ScreenshotUtil.getImageFileName(), ScreenshotUtil.getImageDescription());
+				Bitmap screenshotBitmap = drawView.getDrawingCache();
 
-				Uri bitmapUri = getImageUri(getApplicationContext(), bm);
+				Uri bitmapUri = getImageUri(getApplicationContext(), screenshotBitmap);
 				System.out.println(bitmapUri.getPath());
 
 				if (imgSaved != null) {
@@ -294,9 +265,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 					savedToast.show();
 
 
-
-
-
 				} else {
 					Toast unsavedToast = Toast.makeText(getApplicationContext(),
 						"Oops! Image could not be saved.", Toast.LENGTH_SHORT);
@@ -305,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 				drawView.destroyDrawingCache();
 			}
 		});
-		sendDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+		sendDialog.setNegativeButton(getApplicationContext().getString(R.string.cancel), new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int which){
 				dialog.cancel();
 			}

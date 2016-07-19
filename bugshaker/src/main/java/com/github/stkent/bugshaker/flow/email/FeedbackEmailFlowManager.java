@@ -30,16 +30,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.WindowManager;
 
 import com.github.stkent.bugshaker.ActivityReferenceManager;
 import com.github.stkent.bugshaker.MainActivity;
+import com.github.stkent.bugshaker.R;
 import com.github.stkent.bugshaker.ScreenshotUtil;
 import com.github.stkent.bugshaker.flow.dialog.DialogProvider;
 import com.github.stkent.bugshaker.flow.email.screenshot.ScreenshotProvider;
@@ -54,8 +52,6 @@ public final class FeedbackEmailFlowManager {
 
 	private static final int FLAG_SECURE_VALUE = 0x00002000;
 
-	private static final String SCREENSHOTS_DIRECTORY_NAME = "bug-reports";
-	private static final String SCREENSHOT_FILE_NAME = "latest-screenshot.jpg";
 
 	private boolean isScreenshot;
 
@@ -84,7 +80,7 @@ public final class FeedbackEmailFlowManager {
 	private Dialog alertDialog;
 
 	@NonNull
-	private static File outputFile;
+	private static File logFile;
 
 	private static String[] emailAddresses;
 	private static String emailSubjectLine;
@@ -124,8 +120,6 @@ public final class FeedbackEmailFlowManager {
 							public void onNext(final Uri uri) {
 								startActivity(uri);
 							}
-
-
 						});
 				}
 			} else {
@@ -173,8 +167,7 @@ public final class FeedbackEmailFlowManager {
 							@Override
 							public void onNext(final Uri uri) {
 								saveLogcatToFile(applicationContext);
-
-								sendEmailWithScreenshot(activity, uri, Uri.fromFile(outputFile));
+								sendEmailWithScreenshot(activity, uri, Uri.fromFile(logFile));
 							}
 
 
@@ -194,34 +187,19 @@ public final class FeedbackEmailFlowManager {
 	};
 
 	private void startActivity(Uri uri) {
-		File file = ScreenshotUtil.getScreenshotFile(applicationContext);
+		File screenshotFile = ScreenshotUtil.getScreenshotFile(applicationContext);
+		String screenshotFileAbsolutePath = screenshotFile.getAbsolutePath();
 
-		String path = file.getAbsolutePath();
-
-		if(file.exists()) {
-			Intent ii = new Intent(applicationContext, MainActivity.class);
-			ii.putExtra("uri", path);
-			ii.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			applicationContext.startActivity(ii);
-		}else{
+		if(screenshotFile.exists()) {
+			Intent goToMainActivityIntent = new Intent(applicationContext, MainActivity.class);
+			goToMainActivityIntent.putExtra("uri", screenshotFileAbsolutePath);
+			goToMainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			applicationContext.startActivity(goToMainActivityIntent);
+		}else {
 			throw new RuntimeException();
 		}
 	}
 
-	public String getRealPathFromURI(Context context, Uri contentUri) {
-		Cursor cursor = null;
-		try {
-			String[] proj = { MediaStore.Images.Media.DATA };
-			cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			return cursor.getString(column_index);
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-	}
 
 	public FeedbackEmailFlowManager(
 		@NonNull final Context applicationContext,
@@ -293,50 +271,16 @@ public final class FeedbackEmailFlowManager {
 			return;
 		}
 
-		LayoutInflater inflater = new LayoutInflater(applicationContext) {
-			@Override
-			public LayoutInflater cloneInContext(Context context) {
-				return null;
-			}
-		};
+		AlertDialog.Builder bugAlertBuilder = new AlertDialog.Builder(currentActivity);
+		bugAlertBuilder.setMessage(applicationContext.getString(R.string.shake_detected)+ '\n' + applicationContext.getString(R.string.report_a_bug));
+		bugAlertBuilder.setCancelable(false);
 
-//
-//		View alertLayout = inflater.inflate(R.layout.alert_dialog, null);
-//		final Button report = (Button) alertLayout.findViewById(R.id.btn1);
-//		final Button annotate = (Button) alertLayout.findViewById(R.id.btn2);
-//		final Button cancel = (Button) alertLayout.findViewById(R.id.btn3);
-//
-//		AlertDialog.Builder hi = new AlertDialog.Builder(currentActivity);
-//		hi.setMessage("Shake Detected!"+ '\n' + "Would you like to report a bug?");
+		bugAlertBuilder.setPositiveButton(applicationContext.getString(R.string.report), reportBugClickListener);
+		bugAlertBuilder.setNegativeButton(applicationContext.getString(R.string.cancel), null);
+		bugAlertBuilder.setNeutralButton(applicationContext.getString(R.string.annotate_and_report), screenshotListener);
 
-
-//		final Dialog dialog = new Dialog(applicationContext);
-//		dialog.setTitle("Shake Detected!");
-//		dialog.setContentView(R.layout.alert_dialog);
-//		dialog.show();
-
-
-
-		AlertDialog.Builder hi = new AlertDialog.Builder(currentActivity);
-		hi.setMessage("Shake Detected!"+ '\n' + "Would you like to report a bug?");
-		hi.setCancelable(false);
-
-		hi.setPositiveButton("Report", reportBugClickListener);
-		hi.setNegativeButton("Cancel", null);
-		hi.setNeutralButton("Annotate screenshot and report", screenshotListener);
-
-		AlertDialog alert = hi.create();
-		alert.show();
-
-//		alertDialog.setContentView(R.layout.alert_dialog);
-//
-//      alertDialog = alertDialogProvider.getAlertDialog(currentActivity, reportBugClickListener);
-//      alertDialog.show();
-
-
-
-
-
+		AlertDialog alertDialog = bugAlertBuilder.create();
+		alertDialog.show();
 
 	}
 
@@ -371,12 +315,8 @@ public final class FeedbackEmailFlowManager {
 	public void sendEmailWithScreenshot(
 		@NonNull final Activity activity,
 		@NonNull final Uri screenshotUri, final Uri file) {
-		//	logger.d("visited the SEWS that has 3 parameters");
-
-
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
 			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri, file);
-		file.toString();
 
 		final List<ResolveInfo> resolveInfoList = applicationContext.getPackageManager()
 			.queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -389,46 +329,26 @@ public final class FeedbackEmailFlowManager {
 				Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		}
 		activity.startActivity(Intent.createChooser(feedbackEmailIntent, "Send email"));
-		outputFile.delete();
+		logFile.delete();
 	}
 
-	public void sendEmailWithScreenshot(
-		@NonNull final Activity activity,
-		@NonNull final Uri screenshotUri) {
-
-		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
-			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri);
-
-		final List<ResolveInfo> resolveInfoList = applicationContext.getPackageManager()
-			.queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
-
-		for (final ResolveInfo receivingApplicationInfo : resolveInfoList) {
-			// FIXME: revoke these permissions at some point!
-			applicationContext.grantUriPermission(
-				receivingApplicationInfo.activityInfo.packageName,
-				screenshotUri,
-				Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		}
-
-		activity.startActivity(feedbackEmailIntent);
-	}
 
 	public static File saveLogcatToFile(Context context) {
 		String fileName = "logcat.txt";
-		outputFile = new File(context.getExternalCacheDir(),fileName);
+		logFile = new File(context.getExternalCacheDir(),fileName);
 
 		@SuppressWarnings("unused")
 
 		Process process;
 		{
 			try {
-				process = Runtime.getRuntime().exec("logcat -f " + outputFile.getAbsolutePath());
+				process = Runtime.getRuntime().exec("logcat -f " + logFile.getAbsolutePath());
 			}
 			catch (IOException e) {
 				System.out.println(e.toString());
 			}
 		}
-		return outputFile;
+		return logFile;
 	}
 
 	private void sendEmailWithoutScreenshot(@NonNull final Activity activity) {
@@ -439,7 +359,4 @@ public final class FeedbackEmailFlowManager {
 
 		logger.d("Sending email with no screenshot.");
 	}
-
-
-
 }

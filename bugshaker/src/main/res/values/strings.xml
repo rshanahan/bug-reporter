@@ -7,4 +7,23 @@
     <string name="sml">Small</string>
     <string name="med">Medium</string>
     <string name="lrg">Large</string>
+    <string name="send_annotated_screenshot">Send annotated screenshot</string>
+    <string name="yes">Yes</string>
+    <string name="attach_annotated_screenshot_to_email">Attach annotated screenshot to email?</string>
+
+    <string name="my_device">My Device:  </string>
+    <string name="app_version">App Version:  </string>
+    <string name="android_version">Android Version:   </string>
+    <string name="time_stamp">Time Stamp:  </string>
+    <string name="log">Log:  </string>
+    <string name="id">ID:  </string>
+    <string name="display">Display:  </string>
+
+    <string name="brush_dialog_title">Brush size:  </string>
+    <string name="eraser_dialog_title">Eraser size:  </string>
+    <string name="shake_detected">Shake detected!</string>
+    <string name="report_a_bug">Would you like to report a bug?</string>
+    <string name="report">Report</string>
+    <string name="cancel">Cancel</string>
+    <string name="annotate_and_report">Annotate screenshot and report</string>
 </resources>

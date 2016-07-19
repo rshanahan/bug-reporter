@@ -16,6 +16,9 @@
  */
 package com.github.stkent.bugshaker.flow.email;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -24,9 +27,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.stkent.bugshaker.utilities.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class EmailCapabilitiesProvider {
 
@@ -55,16 +55,6 @@ public final class EmailCapabilitiesProvider {
     }
 
     public boolean canSendEmails() {
-//        logger.d("Checking for email apps...");
-//
-//        final List<ResolveInfo> emailAppInfoList = getEmailAppList();
-//
-//        if (emailAppInfoList.isEmpty()) {
-//            logger.d("No email apps found.");
-//            return false;
-//        }
-//
-//        logEmailAppNames("Available email apps: ", emailAppInfoList);
         return true;
     }
 

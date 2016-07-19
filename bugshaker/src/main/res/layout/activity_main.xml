@@ -41,8 +41,12 @@
             android:padding="10dp"
             android:src="@drawable/send_icon"/>
         <ImageButton
+            android:id="@+id/speechBox"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent"
+            android:src="@drawable/speech_box"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
 
 
     </LinearLayout>

@@ -31,6 +31,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.github.stkent.bugshaker.R;
 import com.github.stkent.bugshaker.utilities.StringUtils;
 
 public final class FeedbackEmailIntentProvider {
@@ -79,20 +80,6 @@ public final class FeedbackEmailIntentProvider {
                 emailAddresses, emailSubjectLine, appInfo, screenshotUri, fileName);
     }
 
-    @NonNull
-    Intent getFeedbackEmailIntent(
-        @NonNull final String[] emailAddresses,
-        @Nullable final String userProvidedEmailSubjectLine,
-        @NonNull final Uri screenshotUri
-    ) {
-
-        final String appInfo = getApplicationInfoString();
-        final String emailSubjectLine = getEmailSubjectLine(userProvidedEmailSubjectLine);
-
-        return genericEmailIntentProvider
-            .getEmailWithAttachmentIntent(
-                emailAddresses, emailSubjectLine, appInfo, screenshotUri);
-    }
 
     @NonNull
     private CharSequence getApplicationName() {
@@ -102,19 +89,19 @@ public final class FeedbackEmailIntentProvider {
 
     @NonNull
     private String getApplicationInfoString() {
-        return    "My Device: " + getDeviceName()
+        return applicationContext.getString(R.string.my_device) + getDeviceName()
             + "\n"
-            + "App Version: " + getVersionDisplayString()
+            + applicationContext.getString(R.string.app_version) + getVersionDisplayString()
             + "\n"
-            + "Android Version: " + getAndroidOsVersionDisplayString()
+            + applicationContext.getString(R.string.android_version) + getAndroidOsVersionDisplayString()
             + "\n"
-            + "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date())
+            + applicationContext.getString(R.string.time_stamp) + getCurrentUtcTimeStringForDate(new Date())
             + "\n"
-            + "Log: " + Log.d("BugShaker-Library", "Test".toString())
+            + applicationContext.getString(R.string.log) + Log.d("BugShaker-Library", "Test".toString())
             + "\n"
-            + "ID: " + Build.ID
+            + applicationContext.getString(R.string.id) + Build.ID
             + "\n"
-            + "Display: " + Build.DISPLAY
+            + applicationContext.getString(R.string.display) + Build.DISPLAY
             + "---------------------"
             + "\n\n";
     }
