@@ -93,7 +93,7 @@ public final class BugShaker implements ShakeDetector.Listener {
         return sharedInstance;
     }
 
-    private BugShaker(@NonNull final Application application) {
+    public BugShaker(@NonNull final Application application) {
         this.application = application;
     }
 
@@ -224,7 +224,6 @@ public final class BugShaker implements ShakeDetector.Listener {
         assembled = true;
         return this;
     }
-
     /**
      * (Required) Start listening for device shaking. You MUST call <code>assemble</code> before
      * calling this method.

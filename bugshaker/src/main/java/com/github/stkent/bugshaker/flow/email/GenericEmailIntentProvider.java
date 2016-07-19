@@ -52,7 +52,22 @@ public final class GenericEmailIntentProvider {
 
 		final Intent result = getEmailIntent(emailAddresses, emailSubjectLine, emailBody);
 
-		result.putExtra(Intent.EXTRA_STREAM, attachmentUri);
+
+//		result.putExtra(Intent.EXTRA_STREAM, attachmentUri);
+//		result.putExtra(Intent.EXTRA_STREAM, attachmentUri2);
+
+		//result.putExtra(Intent.EXTRA_STREAM, attachmentUri);
+		//result.setType("image/jpeg");
+
+		ArrayList<Uri> uris = new ArrayList<Uri>();
+		uris.add(attachmentUri);
+//		uris.add(attachmentUri2);
+
+		result.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+		//setResult(RESULT_OK, result);
+		//finish();
+
+
 
 		return result;
 	}

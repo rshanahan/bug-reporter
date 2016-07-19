@@ -57,6 +57,7 @@ public final class FeedbackEmailFlowManager {
 	private static final String SCREENSHOTS_DIRECTORY_NAME = "bug-reports";
 	private static final String SCREENSHOT_FILE_NAME = "latest-screenshot.jpg";
 
+	private boolean isScreenshot;
 
 	@NonNull
 	private final Context applicationContext;
@@ -73,14 +74,11 @@ public final class FeedbackEmailFlowManager {
 	@NonNull
 	private final FeedbackEmailIntentProvider feedbackEmailIntentProvider;
 
-	@NonNull
-	private final ScreenshotProvider screenshotProvider;
+	private  ScreenshotProvider screenshotProvider;
 
-	@NonNull
-	private final DialogProvider alertDialogProvider;
+	private  DialogProvider alertDialogProvider;
 
-	@NonNull
-	private final Logger logger;
+	private  Logger logger;
 
 	@Nullable
 	private Dialog alertDialog;
@@ -88,8 +86,8 @@ public final class FeedbackEmailFlowManager {
 	@NonNull
 	private static File outputFile;
 
-	private String[] emailAddresses;
-	private String emailSubjectLine;
+	private static String[] emailAddresses;
+	private static String emailSubjectLine;
 	private boolean ignoreFlagSecure;
 
 
@@ -230,6 +228,20 @@ public final class FeedbackEmailFlowManager {
 		@NonNull final EmailCapabilitiesProvider emailCapabilitiesProvider,
 		@NonNull final Toaster toaster,
 		@NonNull final ActivityReferenceManager activityReferenceManager,
+		@NonNull final FeedbackEmailIntentProvider feedbackEmailIntentProvider, boolean isScreenshot) {
+		this.isScreenshot = isScreenshot;
+		this.applicationContext = applicationContext;
+		this.emailCapabilitiesProvider = emailCapabilitiesProvider;
+		this.toaster = toaster;
+		this.activityReferenceManager = activityReferenceManager;
+		this.feedbackEmailIntentProvider = feedbackEmailIntentProvider;
+	}
+
+	public FeedbackEmailFlowManager(
+		@NonNull final Context applicationContext,
+		@NonNull final EmailCapabilitiesProvider emailCapabilitiesProvider,
+		@NonNull final Toaster toaster,
+		@NonNull final ActivityReferenceManager activityReferenceManager,
 		@NonNull final FeedbackEmailIntentProvider feedbackEmailIntentProvider,
 		@NonNull final ScreenshotProvider screenshotProvider,
 		@NonNull final DialogProvider alertDialogProvider,
@@ -356,13 +368,15 @@ public final class FeedbackEmailFlowManager {
 		return result;
 	}
 
-	private void sendEmailWithScreenshot(
+	public void sendEmailWithScreenshot(
 		@NonNull final Activity activity,
 		@NonNull final Uri screenshotUri, final Uri file) {
 		//	logger.d("visited the SEWS that has 3 parameters");
 
+
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
 			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri, file);
+		file.toString();
 
 		final List<ResolveInfo> resolveInfoList = applicationContext.getPackageManager()
 			.queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -378,10 +392,9 @@ public final class FeedbackEmailFlowManager {
 		outputFile.delete();
 	}
 
-	private void sendEmailWithScreenshot(
+	public void sendEmailWithScreenshot(
 		@NonNull final Activity activity,
 		@NonNull final Uri screenshotUri) {
-		//	logger.d("visited the SEWS that has 2 parameters");
 
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
 			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri);
@@ -398,10 +411,6 @@ public final class FeedbackEmailFlowManager {
 		}
 
 		activity.startActivity(feedbackEmailIntent);
-
-
-
-
 	}
 
 	public static File saveLogcatToFile(Context context) {

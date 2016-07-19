@@ -1,32 +1,55 @@
 package com.github.stkent.bugshaker;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider;
+import com.github.stkent.bugshaker.flow.email.FeedbackEmailFlowManager;
+import com.github.stkent.bugshaker.flow.email.FeedbackEmailIntentProvider;
+import com.github.stkent.bugshaker.flow.email.GenericEmailIntentProvider;
 import com.github.stkent.bugshaker.flow.widget.DrawingView;
+import com.github.stkent.bugshaker.utilities.Logger;
+import com.github.stkent.bugshaker.utilities.Toaster;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	public ImageView image;
-	private DrawingView drawing;
+
 	private DrawingView drawView;
 
+	private FeedbackEmailFlowManager feedbackEmailFlowManager;
+
+	private Application application;
+
+	private EmailCapabilitiesProvider emailCapabilitiesProvider;
+
+	private Uri mUri;
+
+	private Activity activity;
 
 	private float smallBrush, mediumBrush, largeBrush;
 	private ImageButton currPaint, drawBtn, eraseBtn, sendBtn;
@@ -36,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		activity = this;
 
 		drawView = (DrawingView)findViewById(R.id.drawing);
 		LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
@@ -53,6 +77,21 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		eraseBtn.setOnClickListener(this);
 		sendBtn = (ImageButton)findViewById(R.id.sendEmail);
 		sendBtn.setOnClickListener(this);
+		final GenericEmailIntentProvider genericEmailIntentProvider
+			= new GenericEmailIntentProvider();
+
+		Logger logger = new Logger(true);
+		application = getApplication();
+
+		emailCapabilitiesProvider = new EmailCapabilitiesProvider(
+			application.getPackageManager(), genericEmailIntentProvider, logger);
+
+		feedbackEmailFlowManager = new FeedbackEmailFlowManager(
+			application,
+			emailCapabilitiesProvider,
+			new Toaster(application),
+			new ActivityReferenceManager(),
+			new FeedbackEmailIntentProvider(application, genericEmailIntentProvider), true);
 
 
 
@@ -61,16 +100,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		if(file.exists()) {
 			Bitmap myBitmap = BitmapFactory.decodeFile(pathOfScreenshot);
 
-			drawing = (DrawingView) findViewById(R.id.drawing);
+			drawView = (DrawingView) findViewById(R.id.drawing);
 			Drawable temp = new BitmapDrawable(getResources(), myBitmap);
 
 
-			drawing.setBackground(temp);
+			drawView.setBackground(temp);
 		}
 		else{
 			throw new RuntimeException();
 		}
 	}
+
+
 
 	@Override
 	public void onClick(View view){
@@ -155,6 +196,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			brushDialog.show();
 		}
 
+		else if (view.getId()==R.id.sendEmail){
+			saveDrawing();
+			//should send screenshot to email
+
+		}
+
 
 	}
 
@@ -210,4 +257,60 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			currPaint=(ImageButton)view;
 		}
 	 }
+
+	public Uri getImageUri(Context inContext, Bitmap inImage) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+		return Uri.parse(path);
+	}
+
+	private void saveDrawing() {
+		AlertDialog.Builder sendDialog = new AlertDialog.Builder(this);
+		sendDialog.setTitle("Send Annotated Screenshot");
+		sendDialog.setMessage("Send Annotated Screenshot on email?");
+		sendDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int which){
+				drawView.setDrawingCacheEnabled(true);
+
+
+				String imgSaved = MediaStore.Images.Media.insertImage(
+					getContentResolver(), drawView.getDrawingCache(),
+					"Screenshot" + ".png", "drawing");
+				Bitmap bm = drawView.getDrawingCache();
+
+				Uri bitmapUri = getImageUri(getApplicationContext(), bm);
+				System.out.println(bitmapUri.getPath());
+
+				if (imgSaved != null) {
+					Toast savedToast = Toast.makeText(getApplicationContext(),
+						"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
+
+
+					File log = feedbackEmailFlowManager.saveLogcatToFile(getApplicationContext());
+					Uri logUri = Uri.fromFile(log);
+					feedbackEmailFlowManager.sendEmailWithScreenshot(activity, bitmapUri, logUri);
+
+					savedToast.show();
+
+
+
+
+
+				} else {
+					Toast unsavedToast = Toast.makeText(getApplicationContext(),
+						"Oops! Image could not be saved.", Toast.LENGTH_SHORT);
+					unsavedToast.show();
+				}
+				drawView.destroyDrawingCache();
+			}
+		});
+		sendDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog, int which){
+				dialog.cancel();
+			}
+		});
+		sendDialog.show();
+
+	}
 }
