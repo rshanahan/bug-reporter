@@ -29,7 +29,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.github.stkent.bugshaker.R;
 import com.github.stkent.bugshaker.utilities.StringUtils;
@@ -96,8 +95,6 @@ public final class FeedbackEmailIntentProvider {
             + applicationContext.getString(R.string.android_version) + getAndroidOsVersionDisplayString()
             + "\n"
             + applicationContext.getString(R.string.time_stamp) + getCurrentUtcTimeStringForDate(new Date())
-            + "\n"
-            + applicationContext.getString(R.string.log) + Log.d("BugShaker-Library", "Test".toString())
             + "\n"
             + applicationContext.getString(R.string.id) + Build.ID
             + "\n"

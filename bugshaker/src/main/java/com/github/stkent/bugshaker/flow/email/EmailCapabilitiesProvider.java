@@ -54,10 +54,6 @@ public final class EmailCapabilitiesProvider {
         this.logger = logger;
     }
 
-    public boolean canSendEmails() {
-        return true;
-    }
-
     boolean canSendEmailsWithAttachments() {
         logger.d("Checking for email apps that can send attachments...");
 
@@ -68,17 +64,8 @@ public final class EmailCapabilitiesProvider {
             return false;
         }
 
-        logEmailAppNames("Available email apps that can send attachments: ", emailAppInfoList);
+        logEmailAppNames(emailAppInfoList);
         return true;
-    }
-
-    @NonNull
-    private List<ResolveInfo> getEmailAppList() {
-        final Intent queryIntent = genericEmailIntentProvider.getEmailIntent(
-                DUMMY_EMAIL_ADDRESSES, DUMMY_EMAIL_SUBJECT_LINE, DUMMY_EMAIL_BODY);
-
-        return packageManager.queryIntentActivities(
-                queryIntent, PackageManager.MATCH_DEFAULT_ONLY);
     }
 
     @NonNull
@@ -91,8 +78,7 @@ public final class EmailCapabilitiesProvider {
     }
 
     private void logEmailAppNames(
-            @NonNull final String prefix,
-            @NonNull final List<ResolveInfo> emailAppInfoList) {
+        @NonNull final List<ResolveInfo> emailAppInfoList) {
 
         final List<CharSequence> emailAppNames = new ArrayList<>();
         for (final ResolveInfo emailAppInfo: emailAppInfoList) {
@@ -100,7 +86,7 @@ public final class EmailCapabilitiesProvider {
         }
 
         final String emailAppInfoString = TextUtils.join(", ", emailAppNames);
-        logger.d(prefix + emailAppInfoString);
+        logger.d("Available email apps that can send attachments: " + emailAppInfoString);
     }
 
 }

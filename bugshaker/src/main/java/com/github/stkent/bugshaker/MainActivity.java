@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -34,22 +33,16 @@ import com.github.stkent.bugshaker.utilities.Toaster;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
-	public ImageView image;
-
 	private DrawingView drawView;
 
 	private FeedbackEmailFlowManager feedbackEmailFlowManager;
 
-	private Application application;
 
-	private EmailCapabilitiesProvider emailCapabilitiesProvider;
-
-//	private Uri mUri;
 
 	private Activity activity;
 
-	private float smallBrush, mediumBrush, largeBrush;
-	private ImageButton currPaint, drawBtn, eraseBtn, sendBtn, speechBtn;
+	private float smallBrush, mediumBrush, largeBrush, smallEraser, mediumEraser, largeEraser;
+	private ImageButton currPaint;
 
 
 	@Override
@@ -67,27 +60,31 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		mediumBrush = getResources().getInteger(R.integer.medium_size);
 		largeBrush = getResources().getInteger(R.integer.large_size);
 
-		drawBtn = (ImageButton)findViewById(R.id.draw_btn);
+		smallEraser = getResources().getInteger(R.integer.small_eraser_size);
+		mediumEraser = getResources().getInteger(R.integer.medium_eraser_size);
+		largeEraser = getResources().getInteger(R.integer.large_eraser_size);
+
+		ImageButton drawBtn = (ImageButton) findViewById(R.id.draw_btn);
 		drawBtn.setOnClickListener(this);
 
 		drawView.setBrushSize(smallBrush);
 
-		eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
+		ImageButton eraseBtn = (ImageButton) findViewById(R.id.erase_btn);
 		eraseBtn.setOnClickListener(this);
 
-		sendBtn = (ImageButton)findViewById(R.id.sendEmail);
+		ImageButton sendBtn = (ImageButton) findViewById(R.id.sendEmail);
 		sendBtn.setOnClickListener(this);
 
-		speechBtn = (ImageButton)findViewById(R.id.speechBox);
+		ImageButton speechBtn = (ImageButton) findViewById(R.id.speechBox);
 		speechBtn.setOnClickListener(this);
 
 		final GenericEmailIntentProvider genericEmailIntentProvider
 			= new GenericEmailIntentProvider();
 
 		Logger logger = new Logger(true);
-		application = getApplication();
+		Application application = getApplication();
 
-		emailCapabilitiesProvider = new EmailCapabilitiesProvider(
+		EmailCapabilitiesProvider emailCapabilitiesProvider = new EmailCapabilitiesProvider(
 			application.getPackageManager(), genericEmailIntentProvider, logger);
 
 		feedbackEmailFlowManager = new FeedbackEmailFlowManager(
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			emailCapabilitiesProvider,
 			new Toaster(application),
 			new ActivityReferenceManager(),
-			new FeedbackEmailIntentProvider(application, genericEmailIntentProvider), true);
+			new FeedbackEmailIntentProvider(application, genericEmailIntentProvider));
 
 
 
@@ -169,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 				@Override
 				public void onClick(View view) {
 					drawView.setErase(true);
-					drawView.setBrushSize(smallBrush);
+					drawView.setBrushSize(smallEraser);
 					brushDialog.dismiss();
 				}
 			});
@@ -179,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 				@Override
 				public void onClick(View view) {
 					drawView.setErase(true);
-					drawView.setBrushSize(mediumBrush);
+					drawView.setBrushSize(mediumEraser);
 					brushDialog.dismiss();
 				}
 			});
@@ -189,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 				@Override
 				public void onClick(View view) {
 					drawView.setErase(true);
-					drawView.setBrushSize(largeBrush);
+					drawView.setBrushSize(largeEraser);
 					brushDialog.dismiss();
 				}
 			});
@@ -208,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	}
 
-	public void createTextEdit(){
+	private void createTextEdit(){
 		//get x and y
 	}
 
@@ -228,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		}
 	 }
 
-	public Uri getImageUri(Context inContext, Bitmap inImage) {
+	private Uri getImageUri(Context inContext, Bitmap inImage) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);

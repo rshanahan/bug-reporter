@@ -50,7 +50,6 @@ public final class BugShaker implements ShakeDetector.Listener {
     private static BugShaker sharedInstance;
 
     private final Application application;
-    private EmailCapabilitiesProvider emailCapabilitiesProvider;
     private FeedbackEmailFlowManager feedbackEmailFlowManager;
     private Logger logger;
 
@@ -58,7 +57,6 @@ public final class BugShaker implements ShakeDetector.Listener {
     private String[] emailAddresses;
     private String emailSubjectLine;
     private AlertDialogType alertDialogType = AlertDialogType.NATIVE;
-    private boolean ignoreFlagSecure        = false;
     private boolean loggingEnabled          = false;
 
     // Instance configuration state:
@@ -93,7 +91,7 @@ public final class BugShaker implements ShakeDetector.Listener {
         return sharedInstance;
     }
 
-    public BugShaker(@NonNull final Application application) {
+    private BugShaker(@NonNull final Application application) {
         this.application = application;
     }
 
@@ -166,25 +164,6 @@ public final class BugShaker implements ShakeDetector.Listener {
     }
 
     /**
-     * (Optional) Choose whether to ignore the <code>FLAG_SECURE</code> <code>Window</code> flag
-     * when capturing screenshots. This method CANNOT be called after calling <code>assemble</code>
-     * or <code>start</code>.
-     *
-     * @param ignoreFlagSecure true if screenshots should be allowed even when
-     *                         <code>FLAG_SECURE</code> is set on the current <code>Window</code>;
-     *                         false otherwise
-     * @return the current <code>BugShaker</code> instance (to allow for method chaining)
-     */
-    public BugShaker setIgnoreFlagSecure(final boolean ignoreFlagSecure) {
-        if (assembled || startAttempted) {
-            throw new IllegalStateException(RECONFIGURATION_EXCEPTION_MESSAGE);
-        }
-
-        this.ignoreFlagSecure = ignoreFlagSecure;
-        return this;
-    }
-
-    /**
      * (Required) Assembles dependencies based on provided configuration information. This method
      * CANNOT be called more than once. This method CANNOT be called after calling
      * <code>start</code>.
@@ -208,18 +187,17 @@ public final class BugShaker implements ShakeDetector.Listener {
         final GenericEmailIntentProvider genericEmailIntentProvider
                 = new GenericEmailIntentProvider();
 
-        emailCapabilitiesProvider = new EmailCapabilitiesProvider(
-                application.getPackageManager(), genericEmailIntentProvider, logger);
+        EmailCapabilitiesProvider emailCapabilitiesProvider = new EmailCapabilitiesProvider(
+            application.getPackageManager(), genericEmailIntentProvider, logger);
 
         feedbackEmailFlowManager = new FeedbackEmailFlowManager(
                 application,
-                emailCapabilitiesProvider,
+            emailCapabilitiesProvider,
                 new Toaster(application),
                 new ActivityReferenceManager(),
                 new FeedbackEmailIntentProvider(application, genericEmailIntentProvider),
                 getScreenshotProvider(),
-                getAlertDialogProvider(),
-                logger);
+            logger);
 
         assembled = true;
         return this;
@@ -240,7 +218,7 @@ public final class BugShaker implements ShakeDetector.Listener {
             return;
         }
 
-        if (emailCapabilitiesProvider.canSendEmails()) {
+
             application.registerActivityLifecycleCallbacks(simpleActivityLifecycleCallback);
 
             final SensorManager sensorManager
@@ -254,9 +232,7 @@ public final class BugShaker implements ShakeDetector.Listener {
             } else {
                 logger.e("Error starting shake detection: hardware does not support detection.");
             }
-        } else {
-            logger.e("Error starting shake detection: device cannot send emails.");
-        }
+
 
         startAttempted = true;
     }
@@ -265,10 +241,11 @@ public final class BugShaker implements ShakeDetector.Listener {
     public void hearShake() {
         logger.d("Shake detected!");
 
+        boolean ignoreFlagSecure = false;
         feedbackEmailFlowManager.startFlowIfNeeded(
                 emailAddresses,
                 emailSubjectLine,
-                ignoreFlagSecure);
+            ignoreFlagSecure);
     }
 
     /**

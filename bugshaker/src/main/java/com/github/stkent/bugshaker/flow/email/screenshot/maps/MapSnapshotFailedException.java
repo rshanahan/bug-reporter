@@ -19,7 +19,7 @@ package com.github.stkent.bugshaker.flow.email.screenshot.maps;
 /**
  * Exception thrown to indicate that our attempt to capture a snapshot of an GoogleMap failed.
  */
-public final class MapSnapshotFailedException extends Exception {
+final class MapSnapshotFailedException extends Exception {
 
     private static final String DETAIL_MESSAGE = "GoogleMap snapshot capture failed.";
 

@@ -39,7 +39,6 @@ import com.github.stkent.bugshaker.ActivityReferenceManager;
 import com.github.stkent.bugshaker.MainActivity;
 import com.github.stkent.bugshaker.R;
 import com.github.stkent.bugshaker.ScreenshotUtil;
-import com.github.stkent.bugshaker.flow.dialog.DialogProvider;
 import com.github.stkent.bugshaker.flow.email.screenshot.ScreenshotProvider;
 import com.github.stkent.bugshaker.utilities.ActivityUtils;
 import com.github.stkent.bugshaker.utilities.Logger;
@@ -52,8 +51,6 @@ public final class FeedbackEmailFlowManager {
 
 	private static final int FLAG_SECURE_VALUE = 0x00002000;
 
-
-	private boolean isScreenshot;
 
 	@NonNull
 	private final Context applicationContext;
@@ -72,14 +69,12 @@ public final class FeedbackEmailFlowManager {
 
 	private  ScreenshotProvider screenshotProvider;
 
-	private  DialogProvider alertDialogProvider;
-
 	private  Logger logger;
 
 	@Nullable
 	private Dialog alertDialog;
 
-	@NonNull
+
 	private static File logFile;
 
 	private static String[] emailAddresses;
@@ -118,7 +113,7 @@ public final class FeedbackEmailFlowManager {
 
 							@Override
 							public void onNext(final Uri uri) {
-								startActivity(uri);
+								startActivity();
 							}
 						});
 				}
@@ -186,7 +181,7 @@ public final class FeedbackEmailFlowManager {
 		}
 	};
 
-	private void startActivity(Uri uri) {
+	private void startActivity() {
 		File screenshotFile = ScreenshotUtil.getScreenshotFile(applicationContext);
 		String screenshotFileAbsolutePath = screenshotFile.getAbsolutePath();
 
@@ -206,8 +201,7 @@ public final class FeedbackEmailFlowManager {
 		@NonNull final EmailCapabilitiesProvider emailCapabilitiesProvider,
 		@NonNull final Toaster toaster,
 		@NonNull final ActivityReferenceManager activityReferenceManager,
-		@NonNull final FeedbackEmailIntentProvider feedbackEmailIntentProvider, boolean isScreenshot) {
-		this.isScreenshot = isScreenshot;
+		@NonNull final FeedbackEmailIntentProvider feedbackEmailIntentProvider) {
 		this.applicationContext = applicationContext;
 		this.emailCapabilitiesProvider = emailCapabilitiesProvider;
 		this.toaster = toaster;
@@ -222,7 +216,6 @@ public final class FeedbackEmailFlowManager {
 		@NonNull final ActivityReferenceManager activityReferenceManager,
 		@NonNull final FeedbackEmailIntentProvider feedbackEmailIntentProvider,
 		@NonNull final ScreenshotProvider screenshotProvider,
-		@NonNull final DialogProvider alertDialogProvider,
 		@NonNull final Logger logger) {
 
 		this.applicationContext = applicationContext;
@@ -231,7 +224,6 @@ public final class FeedbackEmailFlowManager {
 		this.activityReferenceManager = activityReferenceManager;
 		this.feedbackEmailIntentProvider = feedbackEmailIntentProvider;
 		this.screenshotProvider = screenshotProvider;
-		this.alertDialogProvider = alertDialogProvider;
 		this.logger = logger;
 	}
 

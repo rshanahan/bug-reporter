@@ -16,6 +16,11 @@
  */
 package com.github.stkent.bugshaker.flow.email.screenshot.maps;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,11 +37,6 @@ import com.github.stkent.bugshaker.flow.email.screenshot.BaseScreenshotProvider;
 import com.github.stkent.bugshaker.utilities.ActivityUtils;
 import com.github.stkent.bugshaker.utilities.Logger;
 import com.google.android.gms.maps.MapView;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -116,7 +116,7 @@ public final class MapScreenshotProvider extends BaseScreenshotProvider {
 
     @NonNull
     @VisibleForTesting
-    protected List<MapView> locateMapViewsInHierarchy(@NonNull final View view) {
+    List<MapView> locateMapViewsInHierarchy(@NonNull final View view) {
         final List<MapView> result = new ArrayList<>();
 
         final Queue<View> viewsToProcess = new LinkedList<>();

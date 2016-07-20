@@ -51,7 +51,7 @@ public final class GenericEmailIntentProvider {
 
 		final Intent result = getEmailIntent(emailAddresses, emailSubjectLine, emailBody);
 
-		ArrayList<Uri> uris = new ArrayList<Uri>();
+		ArrayList<Uri> uris = new ArrayList<>();
 		uris.add(attachmentUri);
 
 		result.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
@@ -69,7 +69,7 @@ public final class GenericEmailIntentProvider {
 	) {
 
 		final Intent result = getEmailIntent(emailAddresses, emailSubjectLine, emailBody);
-		ArrayList<Uri> uris = new ArrayList<Uri>();
+		ArrayList<Uri> uris = new ArrayList<>();
 		uris.add(attachmentUri);
 		uris.add(attachmentUri2);
 

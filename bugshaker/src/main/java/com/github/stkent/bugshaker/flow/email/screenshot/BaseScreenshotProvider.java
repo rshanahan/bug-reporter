@@ -36,16 +36,16 @@ public abstract class BaseScreenshotProvider implements ScreenshotProvider {
     @NonNull
     private final Logger logger;
 
-    public BaseScreenshotProvider(
-            @NonNull final Context applicationContext,
-            @NonNull final Logger logger) {
+    protected BaseScreenshotProvider(
+        @NonNull final Context applicationContext,
+        @NonNull final Logger logger) {
 
         this.applicationContext = applicationContext;
         this.logger = logger;
     }
 
     @NonNull
-    public abstract Observable<Bitmap> getScreenshotBitmap(@NonNull final Activity activity);
+    protected abstract Observable<Bitmap> getScreenshotBitmap(@NonNull final Activity activity);
 
     @NonNull
     @Override
