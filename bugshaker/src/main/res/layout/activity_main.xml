@@ -11,6 +11,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.github.stkent.bugshaker.MainActivity">
 
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="50dp"
@@ -32,6 +34,14 @@
             android:contentDescription="@string/erase"
             android:src="@drawable/eraser"
             />
+
+        <ImageButton
+            android:id="@+id/speechBox"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:src="@drawable/speech_box"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
         <ImageButton
             android:id="@+id/sendEmail"
             android:layout_width="wrap_content"
@@ -42,13 +52,7 @@
             android:src="@drawable/send_icon"
             android:contentDescription="@string/send_email"/>
 
-        <ImageButton
-            android:id="@+id/speechBox"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:src="@drawable/speech_box"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"/>
+
 
 
     </LinearLayout>
@@ -208,7 +212,21 @@
         >
     </com.github.stkent.bugshaker.flow.widget.DrawingView>
 
+
+    <EditText
+        android:id="@+id/textEditing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="sample text">
+    </EditText>
+
 </LinearLayout>
+
+
+
+
+
 
 
 

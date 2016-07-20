@@ -17,8 +17,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -30,6 +32,8 @@ import com.github.stkent.bugshaker.flow.email.GenericEmailIntentProvider;
 import com.github.stkent.bugshaker.flow.widget.DrawingView;
 import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.Logger;
+import com.github.stkent.bugshaker.utilities.TextAppearingUtils;
+import com.github.stkent.bugshaker.utilities.TextButtonPressedUtil;
 import com.github.stkent.bugshaker.utilities.Toaster;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -38,18 +42,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	private FeedbackEmailFlowManager feedbackEmailFlowManager;
 
-
-
 	private Activity activity;
 
 	private float smallBrush, mediumBrush, largeBrush, smallEraser, mediumEraser, largeEraser;
 	private ImageButton currPaint;
+	public LinearLayout linearLayout;
+
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		linearLayout = (LinearLayout) this.findViewById(R.id.ll);
 		activity = this;
 
 		drawView = (DrawingView)findViewById(R.id.drawing);
@@ -108,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			throw new RuntimeException();
 		}
 	}
+
+
 
 	@Override
 	public void onClick(View view){
@@ -194,16 +201,47 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			saveDrawing();
 		}
 		else if (view.getId()==R.id.speechBox){
-
-			createTextEdit();
+			EditText edit = (EditText)findViewById(R.id.textEditing);
+			TextButtonPressedUtil.setTextButtonPressedTrue();
+			TextAppearingUtils.setEditText(edit);
 		}
-
-
-
 	}
+
+
+
+//	private TextView createNewTextView(String text) {
+//		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(5,5);
+//		final TextView textView = new TextView(getApplicationContext());
+//		textView.setLayoutParams(layoutParams);
+//		textView.setText("New text Edit: " + text);
+//		return textView;
+//	}
 
 	private void createTextEdit(){
 		//get x and y
+
+		View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+
+
+				float x = motionEvent.getX();
+				float y = motionEvent.getY();
+
+				final EditText editText;
+				editText = new EditText(getApplicationContext());
+				LinearLayout ll = (LinearLayout) findViewById(R.id.ll);
+				ll.addView(editText);
+
+				//editText = (EditText)findViewById(R.id.editText);
+				//drawView.add(editText);
+
+
+
+				return false;
+			}
+		};
+
 
 	}
 

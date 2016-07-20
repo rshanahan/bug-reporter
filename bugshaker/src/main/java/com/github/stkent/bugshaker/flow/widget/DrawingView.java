@@ -15,11 +15,13 @@ import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.ViewGroup;
 
 import com.github.stkent.bugshaker.R;
+import com.github.stkent.bugshaker.utilities.TextAppearingUtils;
+import com.github.stkent.bugshaker.utilities.TextButtonPressedUtil;
 
-public class DrawingView extends View {
+public class DrawingView extends ViewGroup {
 
 	//drawing path
 	private Path drawPath;
@@ -37,7 +39,13 @@ public class DrawingView extends View {
 
 	public DrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
 		setupDrawing();
+	}
+
+	@Override
+	public void onLayout(boolean one, int a, int b, int c, int d){
+
 	}
 
 	//get drawing area setup for interaction
@@ -82,12 +90,15 @@ public class DrawingView extends View {
 		float touchX = event.getX();
 		float touchY = event.getY();
 
+		if (TextButtonPressedUtil.getTextButtonPressed()){
+			TextAppearingUtils.makeEditTextVisible();
+		}
+
 		if (isFilling) {
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_UP:
 				FloodFill(new Point((int) touchX, (int) touchY));
 				break;
-
 			default:
 				return true;
 			}
