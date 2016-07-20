@@ -8,7 +8,7 @@
             android:height="@dimen/small_brush"
             android:width="@dimen/small_brush"
             />
-        <solid android:color="#FF666666"/>
+        <solid android:color="#e60808"/>
     </shape>
 
 </selector>

@@ -17,7 +17,6 @@
 package com.github.stkent.bugshaker.flow.email;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +40,7 @@ import com.github.stkent.bugshaker.R;
 import com.github.stkent.bugshaker.ScreenshotUtil;
 import com.github.stkent.bugshaker.flow.email.screenshot.ScreenshotProvider;
 import com.github.stkent.bugshaker.utilities.ActivityUtils;
+import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.Logger;
 import com.github.stkent.bugshaker.utilities.Toaster;
 
@@ -73,10 +73,6 @@ public final class FeedbackEmailFlowManager {
 
 	@Nullable
 	private Dialog alertDialog;
-
-
-	private static File logFile;
-
 	private static String[] emailAddresses;
 	private static String emailSubjectLine;
 	private boolean ignoreFlagSecure;
@@ -161,8 +157,8 @@ public final class FeedbackEmailFlowManager {
 
 							@Override
 							public void onNext(final Uri uri) {
-								saveLogcatToFile(applicationContext);
-								sendEmailWithScreenshot(activity, uri, Uri.fromFile(logFile));
+								LogcatUtil.saveLogcatToFile(applicationContext);
+								sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()));
 							}
 
 
@@ -321,27 +317,27 @@ public final class FeedbackEmailFlowManager {
 				Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		}
 		activity.startActivity(Intent.createChooser(feedbackEmailIntent, "Send email"));
-		logFile.delete();
+		LogcatUtil.getLogFile().delete();
 	}
 
 
-	public static File saveLogcatToFile(Context context) {
-		String fileName = "logcat.txt";
-		logFile = new File(context.getExternalCacheDir(),fileName);
-
-		@SuppressWarnings("unused")
-
-		Process process;
-		{
-			try {
-				process = Runtime.getRuntime().exec("logcat -f " + logFile.getAbsolutePath());
-			}
-			catch (IOException e) {
-				System.out.println(e.toString());
-			}
-		}
-		return logFile;
-	}
+//	public static File saveLogcatToFile(Context context) {
+//		String fileName = "logcat.txt";
+//		logFile = new File(context.getExternalCacheDir(),fileName);
+//
+//		@SuppressWarnings("unused")
+//
+//		Process process;
+//		{
+//			try {
+//				process = Runtime.getRuntime().exec("logcat -f " + logFile.getAbsolutePath());
+//			}
+//			catch (IOException e) {
+//				System.out.println(e.toString());
+//			}
+//		}
+//		return logFile;
+//	}
 
 	private void sendEmailWithoutScreenshot(@NonNull final Activity activity) {
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider

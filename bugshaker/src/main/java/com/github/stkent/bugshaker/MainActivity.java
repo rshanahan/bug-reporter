@@ -28,6 +28,7 @@ import com.github.stkent.bugshaker.flow.email.FeedbackEmailFlowManager;
 import com.github.stkent.bugshaker.flow.email.FeedbackEmailIntentProvider;
 import com.github.stkent.bugshaker.flow.email.GenericEmailIntentProvider;
 import com.github.stkent.bugshaker.flow.widget.DrawingView;
+import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.Logger;
 import com.github.stkent.bugshaker.utilities.Toaster;
 
@@ -94,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			new ActivityReferenceManager(),
 			new FeedbackEmailIntentProvider(application, genericEmailIntentProvider));
 
-
-
 		String pathOfScreenshot = getIntent().getStringExtra("uri");
 		File screenshotFile = new File(pathOfScreenshot);
 		if(screenshotFile.exists()) {
@@ -103,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 			drawView = (DrawingView) findViewById(R.id.drawing);
 			Drawable temp = new BitmapDrawable(getResources(), myBitmap);
-
-
 			drawView.setBackgroundDrawable(temp);
 		}
 		else {
@@ -207,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	private void createTextEdit(){
 		//get x and y
+
 	}
 
 	public void paintClicked(View view){
@@ -255,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 						"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
 
 
-					File log = feedbackEmailFlowManager.saveLogcatToFile(getApplicationContext());
+					File log = LogcatUtil.saveLogcatToFile(getApplicationContext());
 					Uri logUri = Uri.fromFile(log);
 					feedbackEmailFlowManager.sendEmailWithScreenshot(activity, bitmapUri, logUri);
 
