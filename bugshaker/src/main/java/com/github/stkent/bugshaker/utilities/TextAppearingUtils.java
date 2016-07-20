@@ -1,5 +1,6 @@
 package com.github.stkent.bugshaker.utilities;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,6 +24,11 @@ public class TextAppearingUtils {
 
 	public static EditText getEditText(){
 		return editText;
+	}
+
+	public static Bitmap convertToBitmap(){
+		editText.buildDrawingCache(true);
+		return Bitmap.createBitmap(editText.getDrawingCache());
 	}
 
 }

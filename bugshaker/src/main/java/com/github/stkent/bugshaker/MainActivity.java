@@ -279,12 +279,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 				//Saves image in phone Gallery
 				String imgSaved = MediaStore.Images.Media.insertImage(
-					getContentResolver(), drawView.getDrawingCache(),
+					getContentResolver(), drawView.getCombinedBitmap(),
 					ScreenshotUtil.getImageFileName(), ScreenshotUtil.getImageDescription());
-				Bitmap screenshotBitmap = drawView.getDrawingCache();
+
+				Bitmap screenshotBitmap = drawView.getCombinedBitmap();
 
 				Uri bitmapUri = getImageUri(getApplicationContext(), screenshotBitmap);
-				System.out.println(bitmapUri.getPath());
 
 				if (imgSaved != null) {
 					Toast savedToast = Toast.makeText(getApplicationContext(),

@@ -3,6 +3,7 @@ package com.github.stkent.bugshaker.flow.widget;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -33,6 +34,7 @@ public class DrawingView extends ViewGroup {
 	private Canvas drawCanvas;
 	//canvas bitmap
 	private Bitmap canvasBitmap;
+	private Bitmap combined;
 
 	private float brushSize, lastBrushSize;
 	private boolean isFilling = false;  //for flood fill
@@ -45,7 +47,6 @@ public class DrawingView extends ViewGroup {
 
 	@Override
 	public void onLayout(boolean one, int a, int b, int c, int d){
-
 	}
 
 	//get drawing area setup for interaction
@@ -82,8 +83,27 @@ public class DrawingView extends ViewGroup {
 		canvas.drawPath(drawPath, drawPaint);
 	}
 
+	public Bitmap combineImages(Bitmap background, Bitmap text){
+		int width = 0, height = 0;
+		Bitmap canvasBitmap;
+
+		width = ((Activity) getContext()).getWindowManager().getDefaultDisplay().getWidth();
+		height = ((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight();
+
+		canvasBitmap = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
+		Canvas combined = new Canvas(canvasBitmap);
+
+		background = Bitmap.createScaledBitmap(background,width,height,true);
+		combined.drawBitmap(background, 0, 0, null);
+		combined.drawBitmap(text, getMatrix(), null);
+
+		return canvasBitmap;
+	}
 
 
+	public Bitmap getCombinedBitmap(){
+		return combined;
+	}
 	//detect user touch
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -92,6 +112,23 @@ public class DrawingView extends ViewGroup {
 
 		if (TextButtonPressedUtil.getTextButtonPressed()){
 			TextAppearingUtils.makeEditTextVisible();
+
+
+			setDrawingCacheEnabled(true);
+			measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
+			buildDrawingCache(true);
+//			Bitmap screenshotBitmap = Bitmap.createBitmap(getMeasuredWidth(),getMeasuredHeight(),
+//				Bitmap.Config.ARGB_8888);
+
+				//getDrawingCache();
+
+			Bitmap test = Bitmap.createBitmap(getDrawingCache());
+			Bitmap bitmapOfText = TextAppearingUtils.convertToBitmap();
+			combined = combineImages(test, bitmapOfText);
+
+			setDrawingCacheEnabled(false);
+
 		}
 
 		if (isFilling) {
