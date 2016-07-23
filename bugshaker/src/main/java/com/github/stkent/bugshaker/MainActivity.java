@@ -8,6 +8,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,12 +18,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider;
@@ -32,8 +35,6 @@ import com.github.stkent.bugshaker.flow.email.GenericEmailIntentProvider;
 import com.github.stkent.bugshaker.flow.widget.DrawingView;
 import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.Logger;
-import com.github.stkent.bugshaker.utilities.TextAppearingUtils;
-import com.github.stkent.bugshaker.utilities.TextButtonPressedUtil;
 import com.github.stkent.bugshaker.utilities.Toaster;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -41,14 +42,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 	private DrawingView drawView;
 
 	private FeedbackEmailFlowManager feedbackEmailFlowManager;
+	public static final String PREFS_NAME3 = "name3";
+	public static final String PREFS_KEY3 = "key3";
 
 	private Activity activity;
 
 	private float smallBrush, mediumBrush, largeBrush, smallEraser, mediumEraser, largeEraser;
 	private ImageButton currPaint;
 	public LinearLayout linearLayout;
-
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			throw new RuntimeException();
 		}
 	}
-
-
 
 	@Override
 	public void onClick(View view){
@@ -201,13 +200,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			saveDrawing();
 		}
 		else if (view.getId()==R.id.speechBox){
-			EditText edit = (EditText)findViewById(R.id.textEditing);
-			TextButtonPressedUtil.setTextButtonPressedTrue();
-			TextAppearingUtils.setEditText(edit);
+
+			LinearLayout container = (LinearLayout) findViewById(R.id.ll);
+			LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			final View addView = layoutInflater.inflate(R.layout.activity_main, null);
+			TextView textView = (TextView) addView.findViewById(R.id.textEditing);
+				textView.setText("TESTING");
+
+
+			save(getBaseContext(), true);
 		}
 	}
 
-
+	public void save(Context context, boolean isTextButtonPressed){
+		SharedPreferences settings = context.getSharedPreferences(PREFS_NAME3, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PREFS_KEY3, isTextButtonPressed);
+		editor.commit();
+	}
 
 //	private TextView createNewTextView(String text) {
 //		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(5,5);
@@ -224,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 
-
 				float x = motionEvent.getX();
 				float y = motionEvent.getY();
 
@@ -235,8 +244,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 				//editText = (EditText)findViewById(R.id.editText);
 				//drawView.add(editText);
-
-
 
 				return false;
 			}

@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,12 +18,14 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.github.stkent.bugshaker.R;
-import com.github.stkent.bugshaker.utilities.TextAppearingUtils;
-import com.github.stkent.bugshaker.utilities.TextButtonPressedUtil;
 
 public class DrawingView extends ViewGroup {
+
+	public static final String PREFS_NAME3 = "name3";
+	public static final String PREFS_KEY3 = "key3";
 
 	//drawing path
 	private Path drawPath;
@@ -34,19 +37,25 @@ public class DrawingView extends ViewGroup {
 	private Canvas drawCanvas;
 	//canvas bitmap
 	private Bitmap canvasBitmap;
+	private Context context1;
 	private Bitmap combined;
+
+	private EditText editText;
 
 	private float brushSize, lastBrushSize;
 	private boolean isFilling = false;  //for flood fill
 
 	public DrawingView(Context context, AttributeSet attrs) {
+
 		super(context, attrs);
+		context1 = context;
+		editText = new EditText(context1);
 
 		setupDrawing();
 	}
 
 	@Override
-	public void onLayout(boolean one, int a, int b, int c, int d){
+	public void onLayout(boolean one, int a, int b, int c, int d) {
 	}
 
 	//get drawing area setup for interaction
@@ -83,51 +92,92 @@ public class DrawingView extends ViewGroup {
 		canvas.drawPath(drawPath, drawPaint);
 	}
 
-	public Bitmap combineImages(Bitmap background, Bitmap text){
+	public Bitmap combineImages(Bitmap background, Bitmap text) {
 		int width = 0, height = 0;
 		Bitmap canvasBitmap;
 
 		width = ((Activity) getContext()).getWindowManager().getDefaultDisplay().getWidth();
 		height = ((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight();
 
-		canvasBitmap = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
+		canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas combined = new Canvas(canvasBitmap);
 
-		background = Bitmap.createScaledBitmap(background,width,height,true);
+		background = Bitmap.createScaledBitmap(background, width, height, true);
 		combined.drawBitmap(background, 0, 0, null);
-		combined.drawBitmap(text, getMatrix(), null);
+		combined.drawBitmap(text, 20, 20, null);
 
 		return canvasBitmap;
 	}
 
 
-	public Bitmap getCombinedBitmap(){
+	public Bitmap getCombinedBitmap() {
 		return combined;
 	}
+
+	public boolean getValue(Context context){
+		SharedPreferences settings = context.getSharedPreferences(PREFS_NAME3, Context.MODE_PRIVATE);
+		boolean isTextButtonPressed = settings.getBoolean(PREFS_KEY3, false);
+		return isTextButtonPressed;
+	}
+
 	//detect user touch
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		float touchX = event.getX();
 		float touchY = event.getY();
 
-		if (TextButtonPressedUtil.getTextButtonPressed()){
-			TextAppearingUtils.makeEditTextVisible();
+		if (getValue(context1)) {
 
 
-			setDrawingCacheEnabled(true);
-			measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-			layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
-			buildDrawingCache(true);
-//			Bitmap screenshotBitmap = Bitmap.createBitmap(getMeasuredWidth(),getMeasuredHeight(),
-//				Bitmap.Config.ARGB_8888);
 
-				//getDrawingCache();
+//			LinearLayout linearLayout = (LinearLayout) findViewById(R.id.ll);
+//
+//			editText = (EditText) linearLayout.findViewById(R.id.textEditing);
+//			//final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.ll);
+//			final DrawingView drawingView = (DrawingView) findViewById(R.id.drawing);
+//
+//			drawingView.setOnTouchListener(new View.OnTouchListener() {
+//				@Override
+//				public boolean onTouch(View v, MotionEvent event) {
+//					editText.setVisibility(View.VISIBLE);
+//					editText
+//						.setText("touch coordinates : " + String.valueOf(event.getX()) + String.valueOf(event.getY()));
+//					return true;
+//				}
+//			});
+//
+//			DrawingView containerLayout = (DrawingView) findViewById(R.id.drawing);
+//			EditText editText = new EditText(getContext());
+//			editText = (EditText) findViewById(R.id.textEditing);
+//			editText.setText("testing!!!!!!!!!");
+//			editText.setVisibility(ViewGroup.VISIBLE);
+//			containerLayout.addView(editText);
+//			editText.setGravity(Gravity.RIGHT);
+//			DrawingView.LayoutParams layoutParams = (DrawingView.LayoutParams) (editText.getLayoutParams());
 
-			Bitmap test = Bitmap.createBitmap(getDrawingCache());
-			Bitmap bitmapOfText = TextAppearingUtils.convertToBitmap();
-			combined = combineImages(test, bitmapOfText);
 
-			setDrawingCacheEnabled(false);
+//
+//			layoutParams.width = DrawingView.LayoutParams.MATCH_PARENT;
+//			layoutParams.setMargins(23, 34, 0, 0);
+			// RelativeLayout.LayoutParams()
+//			editText.setLayoutParams(layoutParams);
+			//if you want to identify the created editTexts, set a tag, like below
+
+
+//			setDrawingCacheEnabled(true);
+//			measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+//			layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
+//			buildDrawingCache(true);
+////			Bitmap screenshotBitmap = Bitmap.createBitmap(getMeasuredWidth(),getMeasuredHeight(),
+////				Bitmap.Config.ARGB_8888);
+//
+//				//getDrawingCache();
+//
+//			Bitmap test = Bitmap.createBitmap(getDrawingCache());
+//			Bitmap bitmapOfText = TextAppearingUtils.convertToBitmap();
+//			combined = combineImages(test, bitmapOfText);
+//
+//			setDrawingCacheEnabled(false);
 
 		}
 
@@ -139,7 +189,8 @@ public class DrawingView extends ViewGroup {
 			default:
 				return true;
 			}
-		} else {
+		}
+		else {
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				drawPath.moveTo(touchX, touchY);
@@ -193,7 +244,8 @@ public class DrawingView extends ViewGroup {
 		if (isErase) {
 			drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
-		} else {
+		}
+		else {
 			drawPaint.setXfermode(null);
 		}
 	}
@@ -207,18 +259,21 @@ public class DrawingView extends ViewGroup {
 
 		while (queue.size() > 0) {
 			Point nextPoint = queue.poll();
-			if (canvasBitmap.getPixel(nextPoint.x, nextPoint.y) != targetColor)
+			if (canvasBitmap.getPixel(nextPoint.x, nextPoint.y) != targetColor) {
 				continue;
+			}
 
 			Point point = new Point(nextPoint.x + 1, nextPoint.y);
 
 			while ((nextPoint.x > 0) && (canvasBitmap.getPixel(nextPoint.x, nextPoint.y) == targetColor)) {
 				canvasBitmap.setPixel(nextPoint.x, nextPoint.y, paintColor);
-				if ((nextPoint.y > 0) && (canvasBitmap.getPixel(nextPoint.x, nextPoint.y - 1) == targetColor))
+				if ((nextPoint.y > 0) && (canvasBitmap.getPixel(nextPoint.x, nextPoint.y - 1) == targetColor)) {
 					queue.add(new Point(nextPoint.x, nextPoint.y - 1));
+				}
 				if ((nextPoint.y < canvasBitmap.getHeight() - 1)
-					&& (canvasBitmap.getPixel(nextPoint.x, nextPoint.y + 1) == targetColor))
+					&& (canvasBitmap.getPixel(nextPoint.x, nextPoint.y + 1) == targetColor)) {
 					queue.add(new Point(nextPoint.x, nextPoint.y + 1));
+				}
 				nextPoint.x--;
 			}
 
@@ -226,11 +281,13 @@ public class DrawingView extends ViewGroup {
 				&& (canvasBitmap.getPixel(point.x, point.y) == targetColor)) {
 				canvasBitmap.setPixel(point.x, point.y, paintColor);
 
-				if ((point.y > 0) && (canvasBitmap.getPixel(point.x, point.y - 1) == targetColor))
+				if ((point.y > 0) && (canvasBitmap.getPixel(point.x, point.y - 1) == targetColor)) {
 					queue.add(new Point(point.x, point.y - 1));
+				}
 				if ((point.y < canvasBitmap.getHeight() - 1)
-					&& (canvasBitmap.getPixel(point.x, point.y + 1) == targetColor))
+					&& (canvasBitmap.getPixel(point.x, point.y + 1) == targetColor)) {
 					queue.add(new Point(point.x, point.y + 1));
+				}
 				point.x++;
 			}
 		}
