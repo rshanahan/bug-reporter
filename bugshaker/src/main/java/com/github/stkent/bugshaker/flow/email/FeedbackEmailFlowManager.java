@@ -1,13 +1,13 @@
 /**
  * Copyright 2016 Stuart Kent
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
- *
+ * <p/>
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,13 +25,16 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
@@ -53,7 +56,10 @@ public final class FeedbackEmailFlowManager {
 
 	private static final int FLAG_SECURE_VALUE = 0x00002000;
 
-
+	public String filePath;
+	public String fileName;
+	public String secondary;
+	public File fdelete;
 	@NonNull
 	private final Context applicationContext;
 
@@ -69,9 +75,9 @@ public final class FeedbackEmailFlowManager {
 	@NonNull
 	private final FeedbackEmailIntentProvider feedbackEmailIntentProvider;
 
-	private  ScreenshotProvider screenshotProvider;
+	private ScreenshotProvider screenshotProvider;
 
-	private  Logger logger;
+	private Logger logger;
 
 	@Nullable
 	private Dialog alertDialog;
@@ -116,7 +122,8 @@ public final class FeedbackEmailFlowManager {
 							}
 						});
 				}
-			} else {
+			}
+			else {
 				final String warningString = "Window is secured; no screenshot taken";
 
 				toaster.toast(warningString);
@@ -161,15 +168,18 @@ public final class FeedbackEmailFlowManager {
 							@Override
 							public void onNext(final Uri uri) {
 								LogcatUtil.saveLogcatToFile(applicationContext);
-								sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()));
+								sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()),
+									applicationContext.getContentResolver());
 							}
 
 
 						});
-				} else {
+				}
+				else {
 					sendEmailWithoutScreenshot(activity);
 				}
-			} else {
+			}
+			else {
 				final String warningString = "Window is secured; no screenshot taken";
 
 				toaster.toast(warningString);
@@ -184,12 +194,13 @@ public final class FeedbackEmailFlowManager {
 		File screenshotFile = ScreenshotUtil.getScreenshotFile(applicationContext);
 		String screenshotFileAbsolutePath = screenshotFile.getAbsolutePath();
 
-		if(screenshotFile.exists()) {
+		if (screenshotFile.exists()) {
 			Intent goToMainActivityIntent = new Intent(applicationContext, MainActivity.class);
 			goToMainActivityIntent.putExtra("uri", screenshotFileAbsolutePath);
 			goToMainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			applicationContext.startActivity(goToMainActivityIntent);
-		}else {
+		}
+		else {
 			throw new RuntimeException();
 		}
 	}
@@ -250,14 +261,16 @@ public final class FeedbackEmailFlowManager {
 		this.ignoreFlagSecure = ignoreFlagSecure;
 
 
-		ActivityManager activityManager = (ActivityManager)applicationContext.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager activityManager = (ActivityManager) applicationContext
+			.getSystemService(Context.ACTIVITY_SERVICE);
 		ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
 
 		String str1 = componentName.toString();
 		String str2 = "ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}";
 
-		if(!str1.equals(str2))
-		{showDialog();}
+		if (!str1.equals(str2)) {
+			showDialog();
+		}
 	}
 
 	private boolean isFeedbackFlowStarted() {
@@ -271,12 +284,14 @@ public final class FeedbackEmailFlowManager {
 		}
 
 		AlertDialog.Builder bugAlertBuilder = new AlertDialog.Builder(currentActivity);
-		bugAlertBuilder.setMessage(applicationContext.getString(R.string.shake_detected)+ '\n' + applicationContext.getString(R.string.report_a_bug));
+		bugAlertBuilder.setMessage(applicationContext.getString(R.string.shake_detected) + '\n' + applicationContext
+			.getString(R.string.report_a_bug));
 		bugAlertBuilder.setCancelable(false);
 
 		bugAlertBuilder.setPositiveButton(applicationContext.getString(R.string.report), reportBugClickListener);
 		bugAlertBuilder.setNegativeButton(applicationContext.getString(R.string.cancel), null);
-		bugAlertBuilder.setNeutralButton(applicationContext.getString(R.string.annotate_and_report), screenshotListener);
+		bugAlertBuilder
+			.setNeutralButton(applicationContext.getString(R.string.annotate_and_report), screenshotListener);
 
 		AlertDialog alertDialog = bugAlertBuilder.create();
 		alertDialog.show();
@@ -300,10 +315,12 @@ public final class FeedbackEmailFlowManager {
 
 		if (!isWindowSecured) {
 			logger.d("Window is not secured; should attempt to capture screenshot.");
-		} else {
+		}
+		else {
 			if (ignoreFlagSecure) {
 				logger.d("Window is secured, but we're ignoring that.");
-			} else {
+			}
+			else {
 				logger.d("Window is secured, and we're respecting that.");
 			}
 		}
@@ -311,9 +328,17 @@ public final class FeedbackEmailFlowManager {
 		return result;
 	}
 
+	public String getRealPathFromURI(Uri uri, ContentResolver contentResolver) {
+		uri.getScheme();
+		Cursor cursor = contentResolver.query(uri, null, null, null, null);
+		cursor.moveToFirst();
+		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+		return cursor.getString(idx);
+	}
+
 	public void sendEmailWithScreenshot(
 		@NonNull final Activity activity,
-		@NonNull final Uri screenshotUri, final Uri file) {
+		@NonNull final Uri screenshotUri, final Uri file, ContentResolver contentResolver) {
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
 			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri, file);
 
@@ -329,26 +354,9 @@ public final class FeedbackEmailFlowManager {
 		}
 		activity.startActivity(Intent.createChooser(feedbackEmailIntent, "Send email"));
 		LogcatUtil.getLogFile().delete();
+		contentResolver.delete(screenshotUri, null, null);
 	}
 
-
-//	public static File saveLogcatToFile(Context context) {
-//		String fileName = "logcat.txt";
-//		logFile = new File(context.getExternalCacheDir(),fileName);
-//
-//		@SuppressWarnings("unused")
-//
-//		Process process;
-//		{
-//			try {
-//				process = Runtime.getRuntime().exec("logcat -f " + logFile.getAbsolutePath());
-//			}
-//			catch (IOException e) {
-//				System.out.println(e.toString());
-//			}
-//		}
-//		return logFile;
-//	}
 
 	private void sendEmailWithoutScreenshot(@NonNull final Activity activity) {
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider

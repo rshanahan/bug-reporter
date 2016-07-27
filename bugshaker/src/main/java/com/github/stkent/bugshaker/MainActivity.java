@@ -306,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		return Uri.parse(path);
 	}
 
+
+
 	private void saveDrawing() {
 		AlertDialog.Builder sendDialog = new AlertDialog.Builder(this);
 
@@ -326,13 +328,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 				Bitmap screenshotBitmap = drawView.combineImages(bm, bm2, x, y);
 
+
 				//Saves image in phone Gallery
 				String imgSaved = MediaStore.Images.Media.insertImage(
 					getContentResolver(), screenshotBitmap,
 					ScreenshotUtil.getImageFileName(), ScreenshotUtil.getImageDescription());
 
 				Uri bitmapUri = getImageUri(imgSaved, screenshotBitmap);
-
 				if (imgSaved != null) {
 					Toast savedToast = Toast.makeText(getApplicationContext(),
 						"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
@@ -340,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 					File log = LogcatUtil.saveLogcatToFile(getApplicationContext());
 					Uri logUri = Uri.fromFile(log);
-					feedbackEmailFlowManager.sendEmailWithScreenshot(activity, bitmapUri, logUri);
+					feedbackEmailFlowManager.sendEmailWithScreenshot(activity, bitmapUri, logUri, getContentResolver());
 
 					savedToast.show();
 
@@ -352,11 +354,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 				}
 
 				drawView.destroyDrawingCache();
-				File file = new File(bitmapUri.getPath());
-				File deleteFile = new File (file.getAbsolutePath());
 
-				if(deleteFile.exists())
-					deleteFile.delete();
 			}
 		});
 		sendDialog.setNegativeButton(getApplicationContext().getString(R.string.cancel), new DialogInterface.OnClickListener(){
