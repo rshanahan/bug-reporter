@@ -25,16 +25,13 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.WindowManager;
@@ -168,8 +165,7 @@ public final class FeedbackEmailFlowManager {
 							@Override
 							public void onNext(final Uri uri) {
 								LogcatUtil.saveLogcatToFile(applicationContext);
-								sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()),
-									applicationContext.getContentResolver());
+								sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()));
 							}
 
 
@@ -328,17 +324,17 @@ public final class FeedbackEmailFlowManager {
 		return result;
 	}
 
-	public String getRealPathFromURI(Uri uri, ContentResolver contentResolver) {
-		uri.getScheme();
-		Cursor cursor = contentResolver.query(uri, null, null, null, null);
-		cursor.moveToFirst();
-		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-		return cursor.getString(idx);
-	}
+//	public String getRealPathFromURI(Uri uri, ContentResolver contentResolver) {
+//		uri.getScheme();
+//		Cursor cursor = contentResolver.query(uri, null, null, null, null);
+//		cursor.moveToFirst();
+//		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//		return cursor.getString(idx);
+//	}
 
 	public void sendEmailWithScreenshot(
 		@NonNull final Activity activity,
-		@NonNull final Uri screenshotUri, final Uri file, ContentResolver contentResolver) {
+		@NonNull final Uri screenshotUri, final Uri file) {
 		final Intent feedbackEmailIntent = feedbackEmailIntentProvider
 			.getFeedbackEmailIntent(emailAddresses, emailSubjectLine, screenshotUri, file);
 
@@ -353,8 +349,7 @@ public final class FeedbackEmailFlowManager {
 				Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		}
 		activity.startActivity(Intent.createChooser(feedbackEmailIntent, "Send email"));
-		LogcatUtil.getLogFile().delete();
-		contentResolver.delete(screenshotUri, null, null);
+
 	}
 
 

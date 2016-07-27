@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -58,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		linearLayout = (LinearLayout) this.findViewById(R.id.ll);
 		activity = this;
 
-		drawView = (DrawingView)findViewById(R.id.drawing);
-		LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
-		currPaint = (ImageButton)paintLayout.getChildAt(0);
+		drawView = (DrawingView) findViewById(R.id.drawing);
+		LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
+		currPaint = (ImageButton) paintLayout.getChildAt(0);
 		currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 
 		smallBrush = getResources().getInteger(R.integer.small_size);
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 		String pathOfScreenshot = getIntent().getStringExtra("uri");
 		File screenshotFile = new File(pathOfScreenshot);
-		if(screenshotFile.exists()) {
+		if (screenshotFile.exists()) {
 			Bitmap myBitmap = BitmapFactory.decodeFile(pathOfScreenshot);
 
 			drawView = (DrawingView) findViewById(R.id.drawing);
@@ -146,9 +147,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View view){
+	public void onClick(View view) {
 		//respond to clicks
-		if(view.getId()==R.id.draw_btn){
+		if (view.getId() == R.id.draw_btn) {
 			//draw button clicked
 			final Dialog brushDialog = new Dialog(this);
 			brushDialog.setTitle(getApplicationContext().getString(R.string.brush_dialog_title));
@@ -189,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 			brushDialog.show();
 
-		} else if (view.getId() == R.id.erase_btn){
+		}
+		else if (view.getId() == R.id.erase_btn) {
 			//switch to erase, choose size
 			final Dialog brushDialog = new Dialog(this);
 			brushDialog.setTitle(getApplicationContext().getString(R.string.brush_dialog_title));
@@ -226,10 +228,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			brushDialog.show();
 		}
 
-		else if (view.getId()==R.id.sendEmail){
+		else if (view.getId() == R.id.sendEmail) {
 			saveDrawing();
+
 		}
-		else if (view.getId()==R.id.speechBox){
+		else if (view.getId() == R.id.speechBox) {
 			editText.setVisibility(View.VISIBLE);
 			editText.setText("Enter text here");
 
@@ -244,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		}
 	}
 
-	public void save(Context context, boolean isTextButtonPressed){
+	public void save(Context context, boolean isTextButtonPressed) {
 		SharedPreferences settings = context.getSharedPreferences(PREFS_NAME3, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(PREFS_KEY3, isTextButtonPressed);
@@ -259,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 //		return textView;
 //	}
 
-	private void createTextEdit(){
+	private void createTextEdit() {
 		//get x and y
 
 		View.OnTouchListener onTouchListener = new View.OnTouchListener() {
@@ -284,21 +287,21 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 	}
 
-	public void paintClicked(View view){
+	public void paintClicked(View view) {
 		//use chosen color
 		drawView.setBrushSize(drawView.getLastBrushSize());
 
-		if(view!=currPaint){
+		if (view != currPaint) {
 			//update color
-			ImageButton imgView = (ImageButton)view;
+			ImageButton imgView = (ImageButton) view;
 			String clickedButtonColor = view.getTag().toString();
 			drawView.setColor(clickedButtonColor);
 
 			imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 			currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
-			currPaint=(ImageButton)view;
+			currPaint = (ImageButton) view;
 		}
-	 }
+	}
 
 	private Uri getImageUri(String path, Bitmap inImage) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -307,62 +310,74 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 	}
 
 
-
 	private void saveDrawing() {
 		AlertDialog.Builder sendDialog = new AlertDialog.Builder(this);
 
+
 		sendDialog.setTitle(getApplicationContext().getString(R.string.send_annotated_screenshot));
 		sendDialog.setMessage(getApplicationContext().getString(R.string.attach_annotated_screenshot_to_email));
-		sendDialog.setPositiveButton(getApplicationContext().getString(R.string.yes), new DialogInterface.OnClickListener(){
-			public void onClick(DialogInterface dialog, int which){
-				drawView.setDrawingCacheEnabled(true);
-				drawView.buildDrawingCache();
-				Bitmap bm = drawView.getDrawingCache();
+		sendDialog
+			.setPositiveButton(getApplicationContext().getString(R.string.yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					drawView.setDrawingCacheEnabled(true);
+					drawView.buildDrawingCache();
+					Bitmap bm = drawView.getDrawingCache();
 
-				EditText editText = (EditText) findViewById(R.id.textEditing);
-				editText.setDrawingCacheEnabled(true);
-				editText.buildDrawingCache();
-				float x = editText.getX();
-				float y = editText.getY();
-				Bitmap bm2 = editText.getDrawingCache();
+					EditText editText = (EditText) findViewById(R.id.textEditing);
+					editText.setDrawingCacheEnabled(true);
+					editText.buildDrawingCache();
+					float x = editText.getX();
+					float y = editText.getY();
+					Bitmap bm2 = editText.getDrawingCache();
 
-				Bitmap screenshotBitmap = drawView.combineImages(bm, bm2, x, y);
+					Bitmap screenshotBitmap = drawView.combineImages(bm, bm2, x, y);
 
+					//Saves image in phone Gallery
+					String imgSaved = MediaStore.Images.Media.insertImage(
+						getContentResolver(), screenshotBitmap,
+						ScreenshotUtil.getImageFileName(), ScreenshotUtil.getImageDescription());
 
-				//Saves image in phone Gallery
-				String imgSaved = MediaStore.Images.Media.insertImage(
-					getContentResolver(), screenshotBitmap,
-					ScreenshotUtil.getImageFileName(), ScreenshotUtil.getImageDescription());
-
-				Uri bitmapUri = getImageUri(imgSaved, screenshotBitmap);
-				if (imgSaved != null) {
-					Toast savedToast = Toast.makeText(getApplicationContext(),
-						"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-
-
-					File log = LogcatUtil.saveLogcatToFile(getApplicationContext());
-					Uri logUri = Uri.fromFile(log);
-					feedbackEmailFlowManager.sendEmailWithScreenshot(activity, bitmapUri, logUri, getContentResolver());
-
-					savedToast.show();
+					final Uri bitmapUri = getImageUri(imgSaved, screenshotBitmap);
+					if (imgSaved != null) {
+						Toast savedToast = Toast.makeText(getApplicationContext(),
+							"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
 
 
-				} else {
-					Toast unsavedToast = Toast.makeText(getApplicationContext(),
-						"Oops! Image could not be saved.", Toast.LENGTH_SHORT);
-					unsavedToast.show();
+						File log = LogcatUtil.saveLogcatToFile(getApplicationContext());
+						Uri logUri = Uri.fromFile(log);
+						feedbackEmailFlowManager.sendEmailWithScreenshot(activity, bitmapUri, logUri);
+						savedToast.show();
+
+
+					}
+					else {
+						Toast unsavedToast = Toast.makeText(getApplicationContext(),
+							"Oops! Image could not be saved.", Toast.LENGTH_SHORT);
+						unsavedToast.show();
+					}
+
+					drawView.destroyDrawingCache();
+
+					final Handler handler = new Handler();
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							getContentResolver().delete(bitmapUri, null, null);
+							LogcatUtil.getLogFile().delete();
+						}
+					}, 10000);
+
 				}
-
-				drawView.destroyDrawingCache();
-
-			}
-		});
-		sendDialog.setNegativeButton(getApplicationContext().getString(R.string.cancel), new DialogInterface.OnClickListener(){
-			public void onClick(DialogInterface dialog, int which){
-				dialog.cancel();
-			}
-		});
+			});
+		sendDialog.setNegativeButton(getApplicationContext().getString(R.string.cancel),
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
 		sendDialog.show();
+
+
 
 	}
 }
