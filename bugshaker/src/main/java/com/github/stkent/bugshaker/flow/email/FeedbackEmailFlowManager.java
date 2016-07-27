@@ -21,8 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -76,6 +78,7 @@ public final class FeedbackEmailFlowManager {
 	private static String[] emailAddresses;
 	private static String emailSubjectLine;
 	private boolean ignoreFlagSecure;
+	private boolean userHasShakenDevice;
 
 
 	private final OnClickListener screenshotListener = new OnClickListener() {
@@ -246,7 +249,15 @@ public final class FeedbackEmailFlowManager {
 		this.emailSubjectLine = emailSubjectLine;
 		this.ignoreFlagSecure = ignoreFlagSecure;
 
-		showDialog();
+
+		ActivityManager activityManager = (ActivityManager)applicationContext.getSystemService(Context.ACTIVITY_SERVICE);
+		ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
+
+		String str1 = componentName.toString();
+		String str2 = "ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}";
+
+		if(!str1.equals(str2))
+		{showDialog();}
 	}
 
 	private boolean isFeedbackFlowStarted() {

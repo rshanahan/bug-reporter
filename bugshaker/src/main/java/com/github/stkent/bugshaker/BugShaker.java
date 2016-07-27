@@ -242,10 +242,16 @@ public final class BugShaker implements ShakeDetector.Listener {
         logger.d("Shake detected!");
 
         boolean ignoreFlagSecure = false;
-        feedbackEmailFlowManager.startFlowIfNeeded(
+        String str = application.getClass().toString();
+        if(str.equals("class com.example.bugshaker.CustomApplication"))
+        {
+            feedbackEmailFlowManager.startFlowIfNeeded(
                 emailAddresses,
                 emailSubjectLine,
-            ignoreFlagSecure);
+                ignoreFlagSecure);
+        }
+
+
     }
 
     /**

@@ -19,8 +19,6 @@ public class ScreenshotUtil {
 	public static File getScreenshotFile(@NonNull final Context applicationContext) {
 		final File screenshotsDir = new File(
 			applicationContext.getFilesDir(), SCREENSHOTS_DIRECTORY_NAME);
-
-		//noinspection ResultOfMethodCallIgnored
 		screenshotsDir.mkdirs();
 
 		return new File(screenshotsDir, SCREENSHOT_FILE_NAME);

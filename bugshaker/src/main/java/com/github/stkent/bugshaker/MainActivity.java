@@ -18,14 +18,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider;
@@ -50,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 	private float smallBrush, mediumBrush, largeBrush, smallEraser, mediumEraser, largeEraser;
 	private ImageButton currPaint;
 	public LinearLayout linearLayout;
+	EditText editText;
+	float dX, dY;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,36 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 		ImageButton speechBtn = (ImageButton) findViewById(R.id.speechBox);
 		speechBtn.setOnClickListener(this);
+
+		editText = (EditText) findViewById(R.id.textEditing);
+		editText.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent event) {
+
+				switch (event.getAction()) {
+
+				case MotionEvent.ACTION_DOWN:
+
+					dX = view.getX() - event.getRawX();
+					dY = view.getY() - event.getRawY();
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+
+					view.animate()
+						.x(event.getRawX() + dX)
+						.y(event.getRawY() + dY)
+						.setDuration(0)
+						.start();
+
+					break;
+				default:
+					return false;
+				}
+				return true;
+			}
+
+		});
 
 		final GenericEmailIntentProvider genericEmailIntentProvider
 			= new GenericEmailIntentProvider();
@@ -200,15 +230,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 			saveDrawing();
 		}
 		else if (view.getId()==R.id.speechBox){
+			editText.setVisibility(View.VISIBLE);
+			editText.setText("Enter text here");
 
-			LinearLayout container = (LinearLayout) findViewById(R.id.ll);
-			LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			final View addView = layoutInflater.inflate(R.layout.activity_main, null);
-			TextView textView = (TextView) addView.findViewById(R.id.textEditing);
-				textView.setText("TESTING");
-
-
-			save(getBaseContext(), true);
+//			LinearLayout container = (LinearLayout) findViewById(R.id.ll);
+//			LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//			final View addView = layoutInflater.inflate(R.layout.activity_main, null);
+//			TextView textView = (TextView) addView.findViewById(R.id.textEditing);
+//				textView.setText("TESTING");
+//
+//
+//			save(getBaseContext(), true);
 		}
 	}
 
@@ -268,10 +300,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		}
 	 }
 
-	private Uri getImageUri(Context inContext, Bitmap inImage) {
+	private Uri getImageUri(String path, Bitmap inImage) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
 		return Uri.parse(path);
 	}
 
@@ -283,15 +314,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 		sendDialog.setPositiveButton(getApplicationContext().getString(R.string.yes), new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog, int which){
 				drawView.setDrawingCacheEnabled(true);
+				drawView.buildDrawingCache();
+				Bitmap bm = drawView.getDrawingCache();
+
+				EditText editText = (EditText) findViewById(R.id.textEditing);
+				editText.setDrawingCacheEnabled(true);
+				editText.buildDrawingCache();
+				float x = editText.getX();
+				float y = editText.getY();
+				Bitmap bm2 = editText.getDrawingCache();
+
+				Bitmap screenshotBitmap = drawView.combineImages(bm, bm2, x, y);
 
 				//Saves image in phone Gallery
 				String imgSaved = MediaStore.Images.Media.insertImage(
-					getContentResolver(), drawView.getCombinedBitmap(),
+					getContentResolver(), screenshotBitmap,
 					ScreenshotUtil.getImageFileName(), ScreenshotUtil.getImageDescription());
 
-				Bitmap screenshotBitmap = drawView.getCombinedBitmap();
-
-				Uri bitmapUri = getImageUri(getApplicationContext(), screenshotBitmap);
+				Uri bitmapUri = getImageUri(imgSaved, screenshotBitmap);
 
 				if (imgSaved != null) {
 					Toast savedToast = Toast.makeText(getApplicationContext(),
@@ -310,7 +350,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 						"Oops! Image could not be saved.", Toast.LENGTH_SHORT);
 					unsavedToast.show();
 				}
+
 				drawView.destroyDrawingCache();
+				File file = new File(bitmapUri.getPath());
+				File deleteFile = new File (file.getAbsolutePath());
+
+				if(deleteFile.exists())
+					deleteFile.delete();
 			}
 		});
 		sendDialog.setNegativeButton(getApplicationContext().getString(R.string.cancel), new DialogInterface.OnClickListener(){

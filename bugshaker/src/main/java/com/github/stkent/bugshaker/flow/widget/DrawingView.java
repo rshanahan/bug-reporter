@@ -16,7 +16,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
@@ -92,7 +91,8 @@ public class DrawingView extends ViewGroup {
 		canvas.drawPath(drawPath, drawPaint);
 	}
 
-	public Bitmap combineImages(Bitmap background, Bitmap text) {
+	public Bitmap combineImages(Bitmap background, Bitmap text, float x, float y) {
+
 		int width = 0, height = 0;
 		Bitmap canvasBitmap;
 
@@ -104,7 +104,7 @@ public class DrawingView extends ViewGroup {
 
 		background = Bitmap.createScaledBitmap(background, width, height, true);
 		combined.drawBitmap(background, 0, 0, null);
-		combined.drawBitmap(text, 20, 20, null);
+		combined.drawBitmap(text, x, y, null);
 
 		return canvasBitmap;
 	}
@@ -118,100 +118,6 @@ public class DrawingView extends ViewGroup {
 		SharedPreferences settings = context.getSharedPreferences(PREFS_NAME3, Context.MODE_PRIVATE);
 		boolean isTextButtonPressed = settings.getBoolean(PREFS_KEY3, false);
 		return isTextButtonPressed;
-	}
-
-	//detect user touch
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		float touchX = event.getX();
-		float touchY = event.getY();
-
-		if (getValue(context1)) {
-
-
-
-//			LinearLayout linearLayout = (LinearLayout) findViewById(R.id.ll);
-//
-//			editText = (EditText) linearLayout.findViewById(R.id.textEditing);
-//			//final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.ll);
-//			final DrawingView drawingView = (DrawingView) findViewById(R.id.drawing);
-//
-//			drawingView.setOnTouchListener(new View.OnTouchListener() {
-//				@Override
-//				public boolean onTouch(View v, MotionEvent event) {
-//					editText.setVisibility(View.VISIBLE);
-//					editText
-//						.setText("touch coordinates : " + String.valueOf(event.getX()) + String.valueOf(event.getY()));
-//					return true;
-//				}
-//			});
-//
-//			DrawingView containerLayout = (DrawingView) findViewById(R.id.drawing);
-//			EditText editText = new EditText(getContext());
-//			editText = (EditText) findViewById(R.id.textEditing);
-//			editText.setText("testing!!!!!!!!!");
-//			editText.setVisibility(ViewGroup.VISIBLE);
-//			containerLayout.addView(editText);
-//			editText.setGravity(Gravity.RIGHT);
-//			DrawingView.LayoutParams layoutParams = (DrawingView.LayoutParams) (editText.getLayoutParams());
-
-
-//
-//			layoutParams.width = DrawingView.LayoutParams.MATCH_PARENT;
-//			layoutParams.setMargins(23, 34, 0, 0);
-			// RelativeLayout.LayoutParams()
-//			editText.setLayoutParams(layoutParams);
-			//if you want to identify the created editTexts, set a tag, like below
-
-
-//			setDrawingCacheEnabled(true);
-//			measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-//			layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
-//			buildDrawingCache(true);
-////			Bitmap screenshotBitmap = Bitmap.createBitmap(getMeasuredWidth(),getMeasuredHeight(),
-////				Bitmap.Config.ARGB_8888);
-//
-//				//getDrawingCache();
-//
-//			Bitmap test = Bitmap.createBitmap(getDrawingCache());
-//			Bitmap bitmapOfText = TextAppearingUtils.convertToBitmap();
-//			combined = combineImages(test, bitmapOfText);
-//
-//			setDrawingCacheEnabled(false);
-
-		}
-
-		if (isFilling) {
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_UP:
-				FloodFill(new Point((int) touchX, (int) touchY));
-				break;
-			default:
-				return true;
-			}
-		}
-		else {
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				drawPath.moveTo(touchX, touchY);
-				break;
-
-			case MotionEvent.ACTION_MOVE:
-				drawPath.lineTo(touchX, touchY);
-				break;
-
-			case MotionEvent.ACTION_UP:
-				drawCanvas.drawPath(drawPath, drawPaint);
-				drawPath.reset();
-				break;
-
-			default:
-				return false;
-			}
-		}
-
-		invalidate();
-		return true;
 	}
 
 	//set color
