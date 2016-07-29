@@ -59,10 +59,12 @@ public final class FeedbackEmailFlowManager {
 	private boolean ignoreFlagSecure;
 	private ScreenshotProvider screenshotProvider;
 	private ActivityReferenceManager activityReferenceManager;
+	private Context context;
 
 	public FeedbackEmailFlowManager(ScreenshotProvider screenshotProvider, Application application) {
 		this.screenshotProvider = ScreenshotUtil.getScreenshotProvider(application);
 		activityReferenceManager = new ActivityReferenceManager();
+		context = application.getBaseContext();
 
 	}
 
@@ -100,9 +102,7 @@ public final class FeedbackEmailFlowManager {
 
 							@Override
 							public void onNext(final Uri uri) {
-
 								startActivity(context);
-
 							}
 						});
 				}
@@ -205,7 +205,6 @@ public final class FeedbackEmailFlowManager {
 		}
 
 		this.ignoreFlagSecure = ignoreFlagSecure;
-
 		showDialog(context);
 	}
 
