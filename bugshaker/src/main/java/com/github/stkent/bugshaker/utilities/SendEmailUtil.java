@@ -32,6 +32,7 @@ public class SendEmailUtil {
 		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		context.startActivity(sendEmailIntent);
+
 	}
 
 }
