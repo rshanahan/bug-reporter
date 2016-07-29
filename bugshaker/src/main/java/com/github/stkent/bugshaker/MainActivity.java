@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Set;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,12 +24,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.github.stkent.bugshaker.flow.email.FeedbackEmailFlowManager;
 import com.github.stkent.bugshaker.flow.widget.DrawingView;
 import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.SendEmailUtil;
 import com.github.stkent.bugshaker.utilities.SharedPreferencesUtil;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener {
 
 	private DrawingView drawView;
 
@@ -178,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 						emailAddressesArray
 						, SharedPreferencesUtil.getEmailSubjectLine(getBaseContext()));
 					savedToast.show();
+
+					LogcatUtil.saveLogcatToFile(getApplicationContext());
 
 
 				}

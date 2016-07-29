@@ -100,7 +100,9 @@ public final class FeedbackEmailFlowManager {
 
 							@Override
 							public void onNext(final Uri uri) {
+
 								startActivity(context);
+
 							}
 						});
 				}
@@ -114,6 +116,7 @@ public final class FeedbackEmailFlowManager {
 		}
 
 	};
+
 
 	private final OnClickListener reportBugClickListener = new OnClickListener() {
 		@Override
@@ -179,6 +182,7 @@ public final class FeedbackEmailFlowManager {
 			goToMainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			applicationContext.startActivity(goToMainActivityIntent);
 		}
+
 	}
 
 	public void onActivityResumed(@NonNull final Activity activity) {
@@ -261,7 +265,8 @@ public final class FeedbackEmailFlowManager {
 
 	public void sendEmailWithScreenshot(
 		@NonNull final Context context,
-		@NonNull final Uri screenshotUri, final Uri file) {
+		@NonNull final Uri screenshotUri, @NonNull final Uri file) {
+
 		final Intent feedbackEmailIntent = FeedbackEmailIntentUtil
 			.getFeedbackEmailIntent(context, emailAddresses, emailSubjectLine, screenshotUri, file);
 
@@ -276,6 +281,7 @@ public final class FeedbackEmailFlowManager {
 		}
 		Intent sendEmailIntent = Intent.createChooser(feedbackEmailIntent, context.getString(R.string.send_email));
 		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		context.startActivity(sendEmailIntent);
 
 	}

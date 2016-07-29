@@ -13,7 +13,7 @@ public class SendEmailUtil {
 
 	public static void sendEmailWithScreenshot(
 		@NonNull final Context context,
-		@NonNull final Uri screenshotUri, final Uri file,
+		@NonNull final Uri screenshotUri, @NonNull final Uri file,
 		String[] emailAddresses, String emailSubjectLine
 	) {
 		final Intent feedbackEmailIntent = FeedbackEmailIntentUtil
@@ -30,8 +30,8 @@ public class SendEmailUtil {
 		}
 		Intent sendEmailIntent = Intent.createChooser(feedbackEmailIntent, "Send email");
 		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		context.startActivity(sendEmailIntent);
-		LogcatUtil.getLogFile().delete();
 	}
 
 }
