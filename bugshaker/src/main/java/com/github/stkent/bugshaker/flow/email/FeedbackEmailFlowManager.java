@@ -20,22 +20,20 @@ import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.github.stkent.bugshaker.ActivityReferenceManager;
@@ -63,16 +61,28 @@ public final class FeedbackEmailFlowManager {
 	private boolean ignoreFlagSecure;
 	private ScreenshotProvider screenshotProvider;
 	private ActivityReferenceManager activityReferenceManager;
+	private Application app;
 
 	public FeedbackEmailFlowManager(ScreenshotProvider screenshotProvider, Application application) {
 		this.screenshotProvider = ScreenshotUtil.getScreenshotProvider(application);
 		activityReferenceManager = new ActivityReferenceManager();
+		app = application;
 
 	}
 
 	private final OnClickListener screenshotListener = new OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialogInterface, int i) {
+
+			ActivityManager activityManager = (ActivityManager) app.getBaseContext().getSystemService(Context.ACTIVITY_SERVICE);
+			ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
+
+			String str1 = componentName.toString();
+			String str2 = "ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}";
+			if(!str1.equals(str2))
+				{
+					showDialog(app.getBaseContext());
+				}
 
 			final Activity activity = activityReferenceManager.getValidatedActivity();
 			final Context context = activity.getBaseContext();
