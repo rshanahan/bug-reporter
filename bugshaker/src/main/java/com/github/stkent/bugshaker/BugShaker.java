@@ -216,8 +216,14 @@ public final class BugShaker implements ShakeDetector.Listener {
 	@Override
 	public void hearShake() {
 		logger.d("Shake detected!");
-		feedbackEmailFlowManager.startFlowIfNeeded(application,
-			false);
+		String str = application.getClass().toString();
+		if(str.equals("class com.example.bugshaker.CustomApplication")){
+
+			feedbackEmailFlowManager.startFlowIfNeeded(application,
+				false);
+		}
+
+
 	}
 
 }

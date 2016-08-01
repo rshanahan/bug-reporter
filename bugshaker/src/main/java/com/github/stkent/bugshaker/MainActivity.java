@@ -6,7 +6,6 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,13 +17,14 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.github.stkent.bugshaker.flow.email.FeedbackEmailFlowManager;
 import com.github.stkent.bugshaker.flow.widget.DrawingView;
 import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.SendEmailUtil;
@@ -37,6 +37,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	private static final String TAG = "MainActivity";
 
 	private ImageButton currPaint;
+
+	EditText editText;
+	float dX, dY;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,31 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		findViewById(R.id.erase_btn).setOnClickListener(this);
 		findViewById(R.id.sendEmail).setOnClickListener(this);
-		findViewById(R.id.speechBox).setOnClickListener(this);
+		findViewById(R.id.textEdit).setOnClickListener(this);
+
+		editText = (EditText) findViewById(R.id.textEditing);
+		editText.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					dX = view.getX() - event.getRawX();
+					dY = view.getY() - event.getRawY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					view.animate()
+						.x(event.getRawX() + dX)
+						.y(event.getRawY() + dY)
+						.setDuration(0)
+						.start();
+					break;
+				default:
+					return false;
+				}
+				return true;
+			}
+		});
+
 
 		String pathOfScreenshot = getIntent().getStringExtra("uri");
 		File screenshotFile = new File(pathOfScreenshot);
@@ -128,6 +155,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		else if (view.getId() == R.id.sendEmail) {
 			saveSendScreenshotAndLog();
 		}
+		else if(view.getId()==R.id.textEdit){
+			editText.setVisibility(View.VISIBLE);
+			editText.setText("Enter text here");
+		}
 
 	}
 
@@ -144,10 +175,25 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private Uri getImageUri(Context inContext, Bitmap inImage) {
+	private void createTextEdit() {
+
+		View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				float x = motionEvent.getX();
+				float y = motionEvent.getY();
+				final EditText editText;
+				editText = new EditText(getApplicationContext());
+				LinearLayout ll = (LinearLayout) findViewById(R.id.mainActivityLinearLayout);
+				ll.addView(editText);
+				return false;
+			}
+		};
+	}
+
+	private Uri getImageUri(Bitmap inImage, String path) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
 		return Uri.parse(path);
 	}
 
@@ -158,14 +204,28 @@ public class MainActivity extends Activity implements OnClickListener {
 		sendDialog.setMessage(getString(R.string.attach_annotated_screenshot_to_email));
 		sendDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
+
 				drawView.setDrawingCacheEnabled(true);
+				drawView.buildDrawingCache();
+				Bitmap bm = drawView.getDrawingCache();
+
+				EditText editText = (EditText) findViewById(R.id.textEditing);
+				editText.setDrawingCacheEnabled(true);
+				editText.buildDrawingCache();
+				float x = editText.getX();
+				float y = editText.getY();
+				Bitmap bm2 = editText.getDrawingCache();
+
+				Bitmap screenshotBitmap = drawView.combineImages(bm, bm2, x, y);
+
 
 				String imgSaved = MediaStore.Images.Media.insertImage(
-					getContentResolver(), drawView.getDrawingCache(),
+					getContentResolver(),screenshotBitmap,
 					ScreenshotUtil.ANNOTATED_SCREENSHOT, ScreenshotUtil.ANNOTATED_SCREENSHOT_NAME);
-				Bitmap screenshotBitmap = drawView.getDrawingCache();
 
-				Uri bitmapUri = getImageUri(getApplicationContext(), screenshotBitmap);
+				//Bitmap screenshotBitmap = drawView.getDrawingCache();
+
+				final Uri bitmapUri = getImageUri(screenshotBitmap, imgSaved);
 
 				if (imgSaved != null) {
 					Toast savedToast = Toast.makeText(getApplicationContext(),
@@ -180,7 +240,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						, SharedPreferencesUtil.getEmailSubjectLine(getBaseContext()));
 					savedToast.show();
 
-					LogcatUtil.saveLogcatToFile(getApplicationContext());
+//					LogcatUtil.saveLogcatToFile(getApplicationContext());
 
 
 				}
@@ -195,9 +255,10 @@ public class MainActivity extends Activity implements OnClickListener {
 				handler.postDelayed(new Runnable() {
 					@Override
 					public void run() {
+						getContentResolver().delete(bitmapUri, null, null);
 						LogcatUtil.getLogFile().delete();
 					}
-				}, 5000);
+				}, 50000);
 
 
 			}

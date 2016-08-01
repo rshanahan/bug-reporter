@@ -3,6 +3,7 @@ package com.github.stkent.bugshaker.flow.widget;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -38,6 +39,19 @@ public class DrawingView extends View {
 	public DrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setupDrawing();
+	}
+
+	public Bitmap combineImages(Bitmap background, Bitmap text, float x, float y) {
+		int width = 0, height = 0;
+		Bitmap canvasBitmap;
+		width = ((Activity) getContext()).getWindowManager().getDefaultDisplay().getWidth();
+		height = ((Activity) getContext()).getWindowManager().getDefaultDisplay().getHeight();
+		canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas combined = new Canvas(canvasBitmap);
+		background = Bitmap.createScaledBitmap(background, width, height, true);
+		combined.drawBitmap(background, 0, 0, null);
+		combined.drawBitmap(text, x, y, null);
+		return canvasBitmap;
 	}
 
 	private void setupDrawing() {
