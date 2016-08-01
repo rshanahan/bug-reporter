@@ -92,8 +92,10 @@ public final class FeedbackEmailFlowManager {
 				return;
 			}
 
+
+
 			if (shouldAttemptToCaptureScreenshot(activity)) {
-				if (EmailCapabilitiesProvider.canSendEmailsWithAttachments(
+				if (com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider.canSendEmailsWithAttachments(
 					activityReferenceManager.getValidatedActivity().getPackageManager())) {
 					screenshotProvider.getScreenshotUri(activity)
 						.single()
@@ -142,7 +144,7 @@ public final class FeedbackEmailFlowManager {
 			}
 
 			if (shouldAttemptToCaptureScreenshot(activity)) {
-				if (EmailCapabilitiesProvider.canSendEmailsWithAttachments
+				if (com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider.canSendEmailsWithAttachments
 					(activityReferenceManager.getValidatedActivity().getPackageManager())) {
 					screenshotProvider.getScreenshotUri(activity)
 						.single()
@@ -217,8 +219,14 @@ public final class FeedbackEmailFlowManager {
 		}
 
 		this.ignoreFlagSecure = ignoreFlagSecure;
+		ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
 
-		showDialog(context);
+		String str1 = componentName.toString();
+		String str2 = "ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}";
+
+		if(!str1.equals(str2))
+		{showDialog(context);}
 	}
 
 	private boolean isFeedbackFlowStarted() {

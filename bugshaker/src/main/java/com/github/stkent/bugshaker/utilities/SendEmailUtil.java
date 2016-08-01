@@ -16,7 +16,7 @@ public class SendEmailUtil {
 		@NonNull final Uri screenshotUri, @NonNull final Uri file,
 		String[] emailAddresses, String emailSubjectLine
 	) {
-		final Intent feedbackEmailIntent = FeedbackEmailIntentUtil
+		final Intent feedbackEmailIntent = com.github.stkent.bugshaker.utilities.FeedbackEmailIntentUtil
 			.getFeedbackEmailIntent(context, emailAddresses, emailSubjectLine, screenshotUri, file);
 
 		final List<ResolveInfo> resolveInfoList = context.getPackageManager()
@@ -32,7 +32,6 @@ public class SendEmailUtil {
 		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		context.startActivity(sendEmailIntent);
-
 	}
 
 }

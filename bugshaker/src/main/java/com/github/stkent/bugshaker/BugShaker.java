@@ -217,7 +217,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 	public void hearShake() {
 		logger.d("Shake detected!");
 		String str = application.getClass().toString();
-		if(str.equals("class com.example.bugshaker.CustomApplication")){
+		if(str.equals("class com.expedia.bookings.activity.ExpediaBookingApp")){
 
 			feedbackEmailFlowManager.startFlowIfNeeded(application,
 				false);
