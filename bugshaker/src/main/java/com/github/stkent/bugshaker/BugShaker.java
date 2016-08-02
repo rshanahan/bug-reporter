@@ -48,6 +48,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 	// Instance configuration state:
 	private boolean assembled = false;
 	private boolean startAttempted = false;
+	private static boolean bugShakerOn = true;
 
 	private final SimpleActivityLifecycleCallback simpleActivityLifecycleCallback
 		= new SimpleActivityLifecycleCallback() {
@@ -199,15 +200,30 @@ public final class BugShaker implements ShakeDetector.Listener {
 
 	@Override
 	public void hearShake() {
-		logger.d("Shake detected!");
-		String str = application.getClass().toString();
-		if (str.equals("class com.expedia.bookings.activity.ExpediaBookingApp")) {
 
-			feedbackEmailFlowManager.startFlowIfNeeded(application,
-				false);
+		logger.d("Shake detected!");
+
+		if(bugShakerOn){
+			String str = application.getClass().toString();
+			if (str.equals("class com.expedia.bookings.activity.ExpediaBookingApp")) {
+				feedbackEmailFlowManager.startFlowIfNeeded(application,
+					false);
+			}
 		}
 
 
+	}
+
+	public static void turnOff(){
+		bugShakerOn = false;
+	}
+
+	public static boolean checkStatus(){
+		return bugShakerOn;
+	}
+
+	public static void turnOn(){
+		bugShakerOn = true;
 	}
 
 }
