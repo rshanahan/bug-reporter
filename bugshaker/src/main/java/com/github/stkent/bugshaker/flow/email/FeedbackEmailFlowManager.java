@@ -74,15 +74,15 @@ public final class FeedbackEmailFlowManager {
 		@Override
 		public void onClick(DialogInterface dialogInterface, int i) {
 
-			ActivityManager activityManager = (ActivityManager) app.getBaseContext().getSystemService(Context.ACTIVITY_SERVICE);
+			ActivityManager activityManager = (ActivityManager) app.getBaseContext()
+				.getSystemService(Context.ACTIVITY_SERVICE);
 			ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
 
-			String str1 = componentName.toString();
-			String str2 = "ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}";
-			if(!str1.equals(str2))
-				{
-					showDialog(app.getBaseContext());
-				}
+			String currentComponentName = componentName.toString();
+			String mainComponentName = app.getBaseContext().getResources().getString(R.string.main_activity_component);
+			if (!currentComponentName.equals(mainComponentName)) {
+				showDialog(app.getBaseContext());
+			}
 
 			final Activity activity = activityReferenceManager.getValidatedActivity();
 			final Context context = activity.getBaseContext();
@@ -91,8 +91,6 @@ public final class FeedbackEmailFlowManager {
 			if (activity == null) {
 				return;
 			}
-
-
 
 			if (shouldAttemptToCaptureScreenshot(activity)) {
 				if (com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider.canSendEmailsWithAttachments(
@@ -126,11 +124,8 @@ public final class FeedbackEmailFlowManager {
 				toaster.toast(warningString);
 				logger.d(warningString);
 			}
-
 		}
-
 	};
-
 
 	private final OnClickListener reportBugClickListener = new OnClickListener() {
 		@Override
@@ -196,7 +191,6 @@ public final class FeedbackEmailFlowManager {
 			goToMainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			applicationContext.startActivity(goToMainActivityIntent);
 		}
-
 	}
 
 	public void onActivityResumed(@NonNull final Activity activity) {
@@ -219,14 +213,15 @@ public final class FeedbackEmailFlowManager {
 		}
 
 		this.ignoreFlagSecure = ignoreFlagSecure;
-		ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
 
 		String str1 = componentName.toString();
 		String str2 = "ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}";
 
-		if(!str1.equals(str2))
-		{showDialog(context);}
+		if (!str1.equals(str2)) {
+			showDialog(context);
+		}
 	}
 
 	private boolean isFeedbackFlowStarted() {
@@ -305,6 +300,7 @@ public final class FeedbackEmailFlowManager {
 		context.startActivity(sendEmailIntent);
 
 	}
+
 	private void sendEmailWithoutScreenshot(Context applicationContext, @NonNull final Activity activity) {
 		final Intent feedbackEmailIntent = FeedbackEmailIntentUtil
 			.getFeedbackEmailIntent(applicationContext,

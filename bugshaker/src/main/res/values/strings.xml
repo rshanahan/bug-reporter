@@ -28,4 +28,7 @@
     <string name="send_email">send email</string>
     <string name="bug_alert_message">Shake detected! \nWould you like to report a bug?</string>
 
+    <string name="main_activity_component">"ComponentInfo{com.github.stkent.bugshaker/com.github.stkent.bugshaker.MainActivity}"
+    </string>
+
 </resources>

@@ -23,7 +23,6 @@ import android.app.Application;
 import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
 import com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider;
 import com.github.stkent.bugshaker.flow.email.FeedbackEmailFlowManager;
 import com.github.stkent.bugshaker.utilities.Logger;
@@ -45,7 +44,6 @@ public final class BugShaker implements ShakeDetector.Listener {
 	private final Application application;
 	private FeedbackEmailFlowManager feedbackEmailFlowManager;
 	private Logger logger;
-	private static AlertDialogType alertDialogType = AlertDialogType.NATIVE;
 	private boolean loggingEnabled = false;
 	// Instance configuration state:
 	private boolean assembled = false;
@@ -64,7 +62,6 @@ public final class BugShaker implements ShakeDetector.Listener {
 			feedbackEmailFlowManager.onActivityStopped();
 		}
 	};
-
 
 	/**
 	 * @param application the embedding application
@@ -92,31 +89,17 @@ public final class BugShaker implements ShakeDetector.Listener {
 	 * @param emailAddresses one or more email addresses
 	 * @return the current <code>BugShaker</code> instance (to allow for method chaining)
 	 */
-	public BugShaker setEmailAddressesAndSubjectLine(@NonNull final String emailSubjectLine, @NonNull final Set<String> emailAddresses) {
+	public BugShaker setEmailAddressesAndSubjectLine(@NonNull final String emailSubjectLine,
+		@NonNull final Set<String> emailAddresses) {
 		if (assembled || startAttempted) {
 			throw new IllegalStateException(
 				"Configuration must be complete before calling assemble or start");
 		}
 
-		SharedPreferencesUtil.saveEmailSubjectLineAndAddresses(application.getApplicationContext(), emailSubjectLine, emailAddresses);
+		SharedPreferencesUtil
+			.saveEmailSubjectLineAndAddresses(application.getApplicationContext(), emailSubjectLine, emailAddresses);
 		return this;
 	}
-//
-//	/**
-//	 * (Optional) Defines a custom subject line to use for all bug reports. By default, reports will
-//	 * use the string defined in <code>DEFAULT_SUBJECT_LINE</code>. This method CANNOT be called
-//	 * after calling <code>assemble</code> or <code>start</code>.
-//	 *
-//	 * @param emailSubjectLine a custom email subject line
-//	 * @return the current <code>BugShaker</code> instance (to allow for method chaining)
-//	 */
-//	public BugShaker setEmailSubjectLine() {
-//		if (assembled || startAttempted) {
-//			throw new IllegalStateException(RECONFIGURATION_EXCEPTION_MESSAGE);
-//		}
-//		SharedPreferencesUtil.saveEmailSubjectLine(application.getApplicationContext(), emailSubjectLine);
-//		return this;
-//	}
 
 	/**
 	 * (Optional) Defines a dialog type (native/material) to present when a shake is detected.
@@ -175,6 +158,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 		assembled = true;
 		return this;
 	}
+
 	/**
 	 * (Required) Start listening for device shaking. You MUST call <code>assemble</code> before
 	 * calling this method.
@@ -217,7 +201,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 	public void hearShake() {
 		logger.d("Shake detected!");
 		String str = application.getClass().toString();
-		if(str.equals("class com.expedia.bookings.activity.ExpediaBookingApp")){
+		if (str.equals("class com.expedia.bookings.activity.ExpediaBookingApp")) {
 
 			feedbackEmailFlowManager.startFlowIfNeeded(application,
 				false);

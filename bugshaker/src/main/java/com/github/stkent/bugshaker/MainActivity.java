@@ -87,7 +87,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		String pathOfScreenshot = getIntent().getStringExtra("uri");
 		File screenshotFile = new File(pathOfScreenshot);
 
-
 		if (screenshotFile.exists()) {
 			Bitmap myBitmap = BitmapFactory.decodeFile(pathOfScreenshot);
 
@@ -155,7 +154,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		else if (view.getId() == R.id.sendEmail) {
 			saveSendScreenshotAndLog();
 		}
-		else if(view.getId()==R.id.textEdit){
+		else if (view.getId() == R.id.textEdit) {
 			editText.setVisibility(View.VISIBLE);
 			editText.setText("Enter text here");
 		}
@@ -173,22 +172,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
 			currPaint = (ImageButton) view;
 		}
-	}
-
-	private void createTextEdit() {
-
-		View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				float x = motionEvent.getX();
-				float y = motionEvent.getY();
-				final EditText editText;
-				editText = new EditText(getApplicationContext());
-				LinearLayout ll = (LinearLayout) findViewById(R.id.mainActivityLinearLayout);
-				ll.addView(editText);
-				return false;
-			}
-		};
 	}
 
 	private Uri getImageUri(Bitmap inImage, String path) {
@@ -220,17 +203,12 @@ public class MainActivity extends Activity implements OnClickListener {
 
 
 				String imgSaved = MediaStore.Images.Media.insertImage(
-					getContentResolver(),screenshotBitmap,
+					getContentResolver(), screenshotBitmap,
 					ScreenshotUtil.ANNOTATED_SCREENSHOT, ScreenshotUtil.ANNOTATED_SCREENSHOT_NAME);
-
-				//Bitmap screenshotBitmap = drawView.getDrawingCache();
 
 				final Uri bitmapUri = getImageUri(screenshotBitmap, imgSaved);
 
 				if (imgSaved != null) {
-					Toast savedToast = Toast.makeText(getApplicationContext(),
-						"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-
 					File log = LogcatUtil.saveLogcatToFile(getApplicationContext());
 					Uri logUri = Uri.fromFile(log);
 					Set<String> stringSet = SharedPreferencesUtil.getEmailAddresses(getBaseContext());
@@ -238,11 +216,6 @@ public class MainActivity extends Activity implements OnClickListener {
 					SendEmailUtil.sendEmailWithScreenshot(getBaseContext(), bitmapUri, logUri,
 						emailAddressesArray
 						, SharedPreferencesUtil.getEmailSubjectLine(getBaseContext()));
-					savedToast.show();
-
-//					LogcatUtil.saveLogcatToFile(getApplicationContext());
-
-
 				}
 				else {
 					Toast unsavedToast = Toast.makeText(getApplicationContext(),
@@ -258,9 +231,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						getContentResolver().delete(bitmapUri, null, null);
 						LogcatUtil.getLogFile().delete();
 					}
-				}, 50000);
-
-
+				}, 500000);
 			}
 		});
 		sendDialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -269,8 +240,5 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		});
 		sendDialog.show();
-
 	}
-
-
 }
