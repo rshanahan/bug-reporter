@@ -113,6 +113,7 @@ public final class FeedbackEmailFlowManager {
 				logger.d(warningString);
 			}
 
+			dialogInterface.dismiss();
 		}
 
 	};
@@ -169,7 +170,9 @@ public final class FeedbackEmailFlowManager {
 
 				sendEmailWithoutScreenshot(context, activity);
 			}
+			dialog.cancel();
 		}
+
 	};
 
 	private void startActivity(Context applicationContext) {
@@ -225,8 +228,7 @@ public final class FeedbackEmailFlowManager {
 
 		bugAlertBuilder.setPositiveButton(context.getString(R.string.report), reportBugClickListener);
 		bugAlertBuilder.setNegativeButton(context.getString(R.string.cancel), null);
-		bugAlertBuilder
-			.setNeutralButton(context.getString(R.string.annotate_and_report), screenshotListener);
+		bugAlertBuilder.setNeutralButton(context.getString(R.string.annotate_and_report), screenshotListener);
 
 		AlertDialog alertDialog = bugAlertBuilder.create();
 		alertDialog.show();

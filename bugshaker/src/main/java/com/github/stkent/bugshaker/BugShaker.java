@@ -50,6 +50,8 @@ public final class BugShaker implements ShakeDetector.Listener {
 	// Instance configuration state:
 	private boolean assembled = false;
 	private boolean startAttempted = false;
+	public static boolean bugShakerOn = false;
+
 
 	private final SimpleActivityLifecycleCallback simpleActivityLifecycleCallback
 		= new SimpleActivityLifecycleCallback() {
@@ -217,7 +219,18 @@ public final class BugShaker implements ShakeDetector.Listener {
 	public void hearShake() {
 		logger.d("Shake detected!");
 
+		if(bugShakerOn) {
 			feedbackEmailFlowManager.startFlowIfNeeded(application,
 				false);
+		}
+	}
+
+
+	public static void changeStatus(){
+		if(bugShakerOn){
+			bugShakerOn = false;
+		}
+		else
+			bugShakerOn = true;
 	}
 }
