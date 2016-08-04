@@ -36,6 +36,7 @@
 
         <ImageButton
             android:id="@+id/textEdit"
+            android:contentDescription="@string/create_a_text_box_for_annotation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -215,10 +216,10 @@
 
     <EditText
         android:id = "@+id/textEditing"
+        android:hint = "@string/enter_text_here"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:text="sample text"
         android:gravity="center">
         </EditText>
 

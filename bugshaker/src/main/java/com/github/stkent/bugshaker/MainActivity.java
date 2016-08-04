@@ -64,6 +64,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		annotatedTextBox.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					xCoordinate = view.getX() - event.getRawX();
@@ -153,9 +154,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		else if (view.getId() == R.id.sendEmail) {
 			saveSendScreenshotAndLog();
 		}
-		else if(view.getId()==R.id.textEdit){
+		else if (view.getId() == R.id.textEdit) {
 			annotatedTextBox.setVisibility(View.VISIBLE);
-			annotatedTextBox.setText("Enter text here");
 		}
 
 	}
@@ -201,7 +201,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				Bitmap screenshotBitmap = drawView.combineImages(bmOfScreenshot, bmContainingText, x, y);
 
 				String imgSaved = MediaStore.Images.Media.insertImage(
-					getContentResolver(),screenshotBitmap,
+					getContentResolver(), screenshotBitmap,
 					ScreenshotUtil.ANNOTATED_SCREENSHOT, ScreenshotUtil.ANNOTATED_SCREENSHOT_NAME);
 
 				final Uri bitmapUri = getImageUri(screenshotBitmap, imgSaved);

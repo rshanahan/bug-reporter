@@ -35,6 +35,7 @@ public class DrawingView extends View {
 
 	private float brushSize, lastBrushSize;
 	private boolean isFilling = false;  //for flood fill
+	private MotionEvent event;
 
 	public DrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -86,7 +87,7 @@ public class DrawingView extends View {
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public boolean performClick(){
 		float touchX = event.getX();
 		float touchY = event.getY();
 
@@ -121,6 +122,13 @@ public class DrawingView extends View {
 		}
 
 		invalidate();
+		return true;
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent motionEvent) {
+		event = motionEvent;
+		performClick();
 		return true;
 	}
 
