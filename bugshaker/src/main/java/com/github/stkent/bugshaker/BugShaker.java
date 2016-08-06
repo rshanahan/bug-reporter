@@ -50,6 +50,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 	// Instance configuration state:
 	private boolean assembled = false;
 	private boolean startAttempted = false;
+	private static ShakeDetector shakeDetector;
 
 	private final SimpleActivityLifecycleCallback simpleActivityLifecycleCallback
 		= new SimpleActivityLifecycleCallback() {
@@ -82,6 +83,8 @@ public final class BugShaker implements ShakeDetector.Listener {
 
 	public BugShaker(@NonNull final Application application) {
 		this.application = application;
+		shakeDetector = new ShakeDetector(this);
+
 	}
 
 	/**
@@ -195,7 +198,6 @@ public final class BugShaker implements ShakeDetector.Listener {
 
 			final SensorManager sensorManager
 				= (SensorManager) application.getSystemService(SENSOR_SERVICE);
-			final ShakeDetector shakeDetector = new ShakeDetector(this);
 
 			final boolean didStart = shakeDetector.start(sensorManager);
 
@@ -216,8 +218,15 @@ public final class BugShaker implements ShakeDetector.Listener {
 	@Override
 	public void hearShake() {
 		logger.d("Shake detected!");
-		feedbackEmailFlowManager.startFlowIfNeeded(application,
-			false);
+			feedbackEmailFlowManager.startFlowIfNeeded(application,
+				false);
 	}
+
+
+	public static void turnOff(){
+		if(shakeDetector!=null)
+			shakeDetector.stop();
+	}
+
 
 }
