@@ -50,6 +50,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 	// Instance configuration state:
 	private boolean assembled = false;
 	private boolean startAttempted = false;
+	private static boolean bugShakerOn = false;
 	private static ShakeDetector shakeDetector;
 
 	private final SimpleActivityLifecycleCallback simpleActivityLifecycleCallback
@@ -223,6 +224,13 @@ public final class BugShaker implements ShakeDetector.Listener {
 	}
 
 
+	public static void changeStatus(){
+		bugShakerOn = !bugShakerOn;
+	}
+
+	public static boolean isBugShakerOn(){
+		return bugShakerOn;
+	}
 	public static void turnOff(){
 		if(shakeDetector!=null)
 			shakeDetector.stop();

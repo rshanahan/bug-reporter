@@ -90,7 +90,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (screenshotFile.exists()) {
 			Bitmap myBitmap = BitmapFactory.decodeFile(pathOfScreenshot);
 
-			drawView = (DrawingView) findViewById(R.id.drawing);
 			Drawable temp = new BitmapDrawable(getResources(), myBitmap);
 			drawView.setBackgroundDrawable(temp);
 		}

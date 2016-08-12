@@ -5,56 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background"
     tools:context="com.github.stkent.bugshaker.MainActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:background="@color/background"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
-
         <ImageButton
             android:id="@+id/draw_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/buttonLayout"
             android:contentDescription="@string/brush"
-            android:src="@drawable/brush" />
+            android:src="@drawable/ic_shaker_draw" />
 
         <ImageButton
             android:id="@+id/erase_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/buttonLayout"
             android:contentDescription="@string/erase"
-            android:src="@drawable/eraser" />
+            android:src="@drawable/ic_shaker_eraser" />
 
         <ImageButton
             android:id="@+id/textEdit"
+            style="@style/buttonLayout"
             android:contentDescription="@string/create_a_text_box_for_annotation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:padding ="10dp"
-            android:src="@drawable/speech_box" />
+            android:src="@drawable/ic_shaker_comment" />
 
         <ImageButton
             android:id="@+id/sendEmail"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
+            style="@style/buttonLayout"
             android:contentDescription="@string/send_email"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/send_icon" />
+            android:src="@drawable/ic_shaker_email" />
 
     </LinearLayout>
 
@@ -63,6 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/background"
+        android:paddingBottom="24dp"
         android:orientation="vertical">
 
         <!--TOP ROW-->
@@ -70,7 +59,8 @@
             android:id="@+id/paint_colors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/background">
 
             <ImageButton
                 android:layout_width="@dimen/large_brush"
@@ -138,7 +128,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background ="@color/background">
 
             <ImageButton
                 android:layout_width="@dimen/large_brush"
@@ -212,7 +203,9 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp"
-        android:layout_weight="1"></com.github.stkent.bugshaker.flow.widget.DrawingView>
+        android:layout_weight="1">
+
+    </com.github.stkent.bugshaker.flow.widget.DrawingView>
 
     <EditText
         android:id = "@+id/textEditing"
