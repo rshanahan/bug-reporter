@@ -231,6 +231,7 @@ public final class BugShaker implements ShakeDetector.Listener {
 	public static boolean isBugShakerOn(){
 		return bugShakerOn;
 	}
+
 	public static void turnOff(){
 		if(shakeDetector!=null)
 			shakeDetector.stop();
