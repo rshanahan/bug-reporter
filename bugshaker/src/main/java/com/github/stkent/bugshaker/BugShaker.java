@@ -23,7 +23,6 @@ import android.app.Application;
 import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
 import com.github.stkent.bugshaker.flow.email.EmailCapabilitiesProvider;
 import com.github.stkent.bugshaker.flow.email.FeedbackEmailFlowManager;
 import com.github.stkent.bugshaker.utilities.Logger;
@@ -42,15 +41,12 @@ public final class BugShaker implements ShakeDetector.Listener {
 		"Configuration must be completed before calling assemble or start";
 
 	private static BugShaker sharedInstance;
-	private final Application application;
+	private Application application;
 	private FeedbackEmailFlowManager feedbackEmailFlowManager;
 	private Logger logger;
-	private static AlertDialogType alertDialogType = AlertDialogType.NATIVE;
 	private boolean loggingEnabled = false;
-	// Instance configuration state:
-	private boolean assembled = false;
-	private boolean startAttempted = false;
-	private static boolean bugShakerOn = false;
+	public static boolean assembled = false;
+	public static boolean startAttempted = false;
 	private static ShakeDetector shakeDetector;
 
 	private final SimpleActivityLifecycleCallback simpleActivityLifecycleCallback
@@ -97,11 +93,9 @@ public final class BugShaker implements ShakeDetector.Listener {
 	 * @return the current <code>BugShaker</code> instance (to allow for method chaining)
 	 */
 	public BugShaker setEmailAddressesAndSubjectLine(@NonNull final String emailSubjectLine, @NonNull final Set<String> emailAddresses) {
-		if (assembled || startAttempted) {
-			throw new IllegalStateException(
-				"Configuration must be complete before calling assemble or start");
+		if(assembled || startAttempted){
+			turnOff();
 		}
-
 		SharedPreferencesUtil.saveEmailSubjectLineAndAddresses(application.getApplicationContext(), emailSubjectLine, emailAddresses);
 		return this;
 	}
@@ -223,18 +217,11 @@ public final class BugShaker implements ShakeDetector.Listener {
 				false);
 	}
 
-
-	public static void changeStatus(){
-		bugShakerOn = !bugShakerOn;
-	}
-
-	public static boolean isBugShakerOn(){
-		return bugShakerOn;
-	}
-
 	public static void turnOff(){
 		if(shakeDetector!=null)
 			shakeDetector.stop();
+			assembled = false;
+			startAttempted = false;
 	}
 
 

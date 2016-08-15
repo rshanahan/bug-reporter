@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	EditText annotatedTextBox;
 	float xCoordinate, yCoordinate;
+	String clickedButtonColor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +166,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		if (view != currPaint) {
 			ImageButton imgView = (ImageButton) view;
-			String clickedButtonColor = view.getTag().toString();
+			clickedButtonColor = view.getTag().toString();
+			annotatedTextBox.setTextColor(Color.parseColor(clickedButtonColor));
 			drawView.setColor(clickedButtonColor);
 			imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 			currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));

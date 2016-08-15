@@ -70,7 +70,9 @@
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="@color/brown" />
+                android:tag="@color/brown"
+                android:elevation="100dp"
+                android:shadowColor="@color/black"/>
 
             <ImageButton
                 android:layout_width="@dimen/large_brush"
@@ -79,6 +81,7 @@
                 android:background="@color/red"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/red" />
 
@@ -89,6 +92,7 @@
                 android:background="@color/orange"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/orange" />
 
@@ -99,6 +103,7 @@
                 android:background="@color/yellow"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/yellow" />
 
@@ -109,6 +114,7 @@
                 android:background="@color/green"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/green" />
 
@@ -119,6 +125,7 @@
                 android:background="@color/teal"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/teal" />
 
@@ -138,6 +145,7 @@
                 android:background="@color/blue"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/blue" />
 
@@ -148,6 +156,7 @@
                 android:background="@color/salmon"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/salmon" />
 
@@ -158,6 +167,7 @@
                 android:background="@color/white"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/white" />
 
@@ -168,6 +178,7 @@
                 android:background="@color/navy"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/navy" />
 
@@ -178,6 +189,7 @@
                 android:background="@color/black"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/black" />
 
@@ -188,6 +200,7 @@
                 android:background="@color/purple"
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
+                android:elevation="100dp"
                 android:src="@drawable/paint"
                 android:tag="@color/purple" />
 
