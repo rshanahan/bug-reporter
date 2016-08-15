@@ -42,14 +42,14 @@ public final class BugShaker implements ShakeDetector.Listener {
 		"Configuration must be completed before calling assemble or start";
 
 	private static BugShaker sharedInstance;
-	private final Application application;
+	private Application application;
 	private FeedbackEmailFlowManager feedbackEmailFlowManager;
 	private Logger logger;
 	private static AlertDialogType alertDialogType = AlertDialogType.NATIVE;
 	private boolean loggingEnabled = false;
 	// Instance configuration state:
-	private boolean assembled = false;
-	private boolean startAttempted = false;
+	private static boolean assembled = false;
+	private static boolean startAttempted = false;
 	private static boolean bugShakerOn = false;
 	private static ShakeDetector shakeDetector;
 
@@ -223,18 +223,11 @@ public final class BugShaker implements ShakeDetector.Listener {
 				false);
 	}
 
-
-	public static void changeStatus(){
-		bugShakerOn = !bugShakerOn;
-	}
-
-	public static boolean isBugShakerOn(){
-		return bugShakerOn;
-	}
-
 	public static void turnOff(){
 		if(shakeDetector!=null)
 			shakeDetector.stop();
+			assembled = false;
+			startAttempted = false;
 	}
 
 
