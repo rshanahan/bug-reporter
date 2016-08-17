@@ -157,7 +157,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		else if (view.getId() == R.id.textEdit) {
 			annotatedTextBox.setVisibility(View.VISIBLE);
-			annotatedTextBox.setTextColor(Color.parseColor(clickedButtonColor));
+
 		}
 
 	}
@@ -168,7 +168,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (view != currPaint) {
 			ImageButton imgView = (ImageButton) view;
 			clickedButtonColor = view.getTag().toString();
-			System.out.println(clickedButtonColor);
+			annotatedTextBox.setTextColor(Color.parseColor(clickedButtonColor));
 			drawView.setColor(clickedButtonColor);
 			imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 			currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));

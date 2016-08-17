@@ -32,6 +32,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.github.stkent.bugshaker.ActivityReferenceManager;
@@ -173,6 +174,7 @@ public final class FeedbackEmailFlowManager {
 	};
 
 	private void startActivity(Context applicationContext) {
+		Log.e("****","****Starting");
 		File screenshotFile = ScreenshotUtil.getScreenshotFile(applicationContext);
 		String screenshotFileAbsolutePath = screenshotFile.getAbsolutePath();
 
