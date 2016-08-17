@@ -48,8 +48,8 @@ public final class BugShaker implements ShakeDetector.Listener {
 	private static AlertDialogType alertDialogType = AlertDialogType.NATIVE;
 	private boolean loggingEnabled = false;
 	// Instance configuration state:
-	private static boolean assembled = false;
-	private static boolean startAttempted = false;
+	public static boolean assembled=false;
+	public static boolean startAttempted=false;
 	private static boolean bugShakerOn = false;
 	private static ShakeDetector shakeDetector;
 
@@ -97,9 +97,13 @@ public final class BugShaker implements ShakeDetector.Listener {
 	 * @return the current <code>BugShaker</code> instance (to allow for method chaining)
 	 */
 	public BugShaker setEmailAddressesAndSubjectLine(@NonNull final String emailSubjectLine, @NonNull final Set<String> emailAddresses) {
-		if (assembled || startAttempted) {
-			throw new IllegalStateException(
-				"Configuration must be complete before calling assemble or start");
+//		if (assembled || startAttempted) {
+//			throw new IllegalStateException(
+//				"Configuration must be complete before calling assemble or start");
+//		}
+
+		if(assembled || startAttempted){
+			turnOff();
 		}
 
 		SharedPreferencesUtil.saveEmailSubjectLineAndAddresses(application.getApplicationContext(), emailSubjectLine, emailAddresses);

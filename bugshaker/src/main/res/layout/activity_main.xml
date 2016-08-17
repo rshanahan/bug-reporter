@@ -70,7 +70,11 @@
                 android:contentDescription="@string/paint"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="@color/brown" />
+                android:tag="@color/brown"
+                android:shadowRadius="3"
+                android:shadowDx="3"
+                android:shadowDy="2"
+                android:shadowColor="@color/black"/>
 
             <ImageButton
                 android:layout_width="@dimen/large_brush"
