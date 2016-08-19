@@ -17,7 +17,7 @@
 package com.github.stkent.bugshaker.flow.email;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,8 +27,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,6 +41,8 @@ import com.github.stkent.bugshaker.utilities.ActivityUtils;
 import com.github.stkent.bugshaker.utilities.FeedbackEmailIntentUtil;
 import com.github.stkent.bugshaker.utilities.LogcatUtil;
 import com.github.stkent.bugshaker.utilities.Logger;
+import com.github.stkent.bugshaker.utilities.SendEmailUtil;
+import com.github.stkent.bugshaker.utilities.SharedPreferencesUtil;
 import com.github.stkent.bugshaker.utilities.Toaster;
 
 import rx.Subscriber;
@@ -119,6 +119,10 @@ public final class FeedbackEmailFlowManager {
 
 
 	private final OnClickListener reportBugClickListener = new OnClickListener() {
+
+		Set<String> stringSet = SharedPreferencesUtil.getEmailAddresses(context);
+		String[] emailAddresses = (String[]) stringSet.toArray(new String[stringSet.size()]);
+
 		@Override
 		public void onClick(final DialogInterface dialog, final int which) {
 			final Activity activity = activityReferenceManager.getValidatedActivity();
@@ -147,19 +151,22 @@ public final class FeedbackEmailFlowManager {
 								final String errorString = "Screenshot capture failed";
 								toaster.toast(errorString);
 								logger.e(errorString);
-								sendEmailWithoutScreenshot(context, activity);
+								sendEmailWithoutScreenshot(context, activity, emailAddresses, emailSubjectLine);
 							}
 
 							@Override
 							public void onNext(final Uri uri) {
 								LogcatUtil.saveLogcatToFile(context);
-								sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()));
+								Set<String> stringSet = SharedPreferencesUtil.getEmailAddresses(activity);
+								String[] emailAddressesArray = stringSet.toArray(new String[stringSet.size()]);
+								SendEmailUtil.sendEmailWithScreenshot(activity, uri, Uri.fromFile(LogcatUtil.getLogFile()),
+									emailAddressesArray, SharedPreferencesUtil.getEmailSubjectLine(activity));
 							}
 
 						});
 				}
 				else {
-					sendEmailWithoutScreenshot(context, activity);
+					sendEmailWithoutScreenshot(context, activity, emailAddresses, emailSubjectLine);
 				}
 			}
 			else {
@@ -167,7 +174,7 @@ public final class FeedbackEmailFlowManager {
 				toaster.toast(warningString);
 				logger.d(warningString);
 
-				sendEmailWithoutScreenshot(context, activity);
+				sendEmailWithoutScreenshot(context, activity, emailAddresses, emailSubjectLine);
 			}
 		}
 	};
@@ -262,29 +269,8 @@ public final class FeedbackEmailFlowManager {
 		return result;
 	}
 
-	public void sendEmailWithScreenshot(
-		@NonNull final Context context,
-		@NonNull final Uri screenshotUri, @NonNull final Uri file) {
-
-		final Intent feedbackEmailIntent = FeedbackEmailIntentUtil
-			.getFeedbackEmailIntent(context, emailAddresses, emailSubjectLine, screenshotUri, file);
-
-		final List<ResolveInfo> resolveInfoList = context.getPackageManager()
-			.queryIntentActivities(feedbackEmailIntent, PackageManager.MATCH_DEFAULT_ONLY);
-
-		for (final ResolveInfo receivingApplicationInfo : resolveInfoList) {
-			context.grantUriPermission(
-				receivingApplicationInfo.activityInfo.packageName,
-				screenshotUri,
-				Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		}
-		Intent sendEmailIntent = Intent.createChooser(feedbackEmailIntent, context.getString(R.string.send_email));
-		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		sendEmailIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-		context.startActivity(sendEmailIntent);
-
-	}
-	private void sendEmailWithoutScreenshot(Context applicationContext, @NonNull final Activity activity) {
+	private void sendEmailWithoutScreenshot(Context applicationContext,
+		@NonNull final Activity activity, String[] emailAddresses, String emailSubjectLine) {
 		final Intent feedbackEmailIntent = FeedbackEmailIntentUtil
 			.getFeedbackEmailIntent(applicationContext,
 				emailAddresses, emailSubjectLine);
